@@ -5,7 +5,7 @@
 
 TA 間連携プロトコルの利用を前提とする。
 TA 間連携プロトコルにより、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
-加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報が揃う。
+加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
 ## 2. データ指定
@@ -136,12 +136,12 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 |ディレクトリ内読み込みタイプ|`dir_rty` に空白区切りで|`dir_rty` に配列で|
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
-ディレクトリでないデータ本体を除き、情報は全て JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は X-Pds-Datainfo ヘッダに入れて返す。
+ディレクトリでないデータ本体を除き、情報は基本 JSON で返す。
+読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は JWT で X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
-|X-Pds-Datainfo|メタデータやアクセス権限を表す JSON|
+|X-Pds-Datainfo|メタデータやアクセス権限を含む JWT|
 
 
 ### 4.1. データの読み取り
@@ -318,7 +318,7 @@ TA 間連携プロトコルの付加情報は省いている。
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: plain/text
-X-PDS-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
+X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     My0wOVQxODo0NDo0MCswOTAwIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsib2JzZXJ2
     ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsicmVhZCI6dHJ1ZX19LCJzZWxmIjp7
     Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQiOnRydWV9LCJodHRwczovL3dyaXRl
@@ -365,7 +365,7 @@ JWT のクレームセットの内容は、
 次の指定項目が追加される。
 
 * 親ディレクトリ作成フラグ
-    * 先祖ディレクトリを作成するかどうか。
+    * 必要なら親ディレクトリまでを作成するかどうか。
 
 指定方法は以下の通り。
 
@@ -425,6 +425,7 @@ HTTP/1.1 204 No Content
 ## 6. 削除操作
 
 指定項目として読み取り操作と同じ再帰フラグが追加される。
+空でないディレクトリを削除する場合、再帰フラグが必須になる。
 
 
 ### 6.1. データの削除
