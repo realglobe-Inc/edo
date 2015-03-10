@@ -10,6 +10,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 ## 2. データ指定
 
+
 ### 2.1. 指定項目
 
 以下の項目によりデータを指定する。
@@ -45,7 +46,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 ### 2.2. URL による指定
 
-ユーザータグ、TA の ID はパーセントエンコードした上で、パスと共に以下のように指定する。
+ユーザータグ、TA の ID をパーセントエンコードした上で、パスと共に以下のように指定する。
 
 ```
 /<ユーザータグ>/<TA の ID><パス>
@@ -80,7 +81,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 ### 2.3.1. JSON による指定の例
 
-```JSON
+```json
 {
     "user_tag": "user",
     "ta": "https://writer.example.org",
@@ -92,7 +93,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 ## 3. 操作の種類
 
-|メソッド|操作|
+|HTTP メソッド|操作|
 |:--|:--|
 |GET|読み取り|
 |PUT|書き込み・作成|
@@ -116,8 +117,8 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 * ディレクトリ内読み込みタイプ
     * 対象がディレクトリなら任意。
       そうでなければ無し。
-      ディレクトリの中のデータおよびディレクトリに対して追加で読み込む情報の種類の配列。
-      以下が存在し、無指定なら名前とディレクトリのみ。
+      ディレクトリの中のデータおよび中のディレクトリに対して追加で読み込む情報の種類の配列。
+      以下が存在し、無指定なら名前とディレクトリかどうかのみ読み込む。
         * `metadata`
             * サイズ、更新日時等のメタデータ。
         * `permission`
@@ -133,10 +134,10 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 |:--|:--|:--|
 |読み込みタイプ|`rty` に空白区切りで|`rty` に配列で|
 |ディレクトリ内読み込みタイプ|`dir_rty` に空白区切りで|`dir_rty` に配列で|
-|再帰フラグ|`recursive` に `true` または `false` で|`recursive` に真偽値で|
+|再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
 ディレクトリでないデータ本体を除き、情報は全て JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は X-Pds-Datainfo ヘッダに入れて返される。
+読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
@@ -145,7 +146,8 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 ### 4.1. データの読み取り
 
-データをそのまま返す。
+データをそのままレスポンスボディに入れて返す。
+
 
 #### 4.1.1. データの読み取り例
 
@@ -153,7 +155,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 ```HTTP
 GET /user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -173,7 +175,7 @@ Content-Type: plain/text
 
 ### 4.2. ディレクトリの読み取り
 
-ディレクトリの中に入っているデータおよびディレクトリの情報を配列で返す。
+ディレクトリの中に入っているデータおよびディレクトリの情報を JSON 配列でレスポンスボディに入れて返す。
 
 
 #### 4.2.1. ディレクトリの読み取り例
@@ -182,7 +184,7 @@ Content-Type: plain/text
 
 ```HTTP
 GET /user/https%3A%2F%2Fwriter.example.org/profile/ HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -204,9 +206,10 @@ Content-Type: application/json
 ]
 ```
 
+
 ### 4.3. メタデータの読み取り
 
-サイズや更新日時等を返す。
+サイズや更新日時等を JSON オブジェクトでレスポンスボディに入れて返す。
 
 
 #### 4.3.1. メタデータの読み取り例
@@ -215,7 +218,7 @@ Content-Type: application/json
 
 ```HTTP
 GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -246,7 +249,7 @@ Content-Type: application/json
 
 ```HTTP
 GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=permission HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -274,8 +277,8 @@ Content-Type: application/json
 
 ```HTTP
 GET /user/https%3A%2F%2Fwriter.example.org/profile/career?
-    rty=metadata+permission HTTP/1.1
-Host pds.example.org
+    rty=content+metadata+permission HTTP/1.1
+Host: pds.example.org
 ```
 
 改行とインデントは表示の都合による。
@@ -305,14 +308,16 @@ X-PDS-Datainfo: {"name":"career","bytes":102,"created_at":"2013-03-09T18:44:40+0
 
 ### 5.1. データの書き込み
 
-そのまま書き込む。
+リクエストボディをそのまま書き込む。
 
 
 #### 5.1.1. データの書き込み例
 
+リクエストは、
+
 ```HTTP
-PUT /user/https%3A%2F%2Fwriter.example.org/profile/hobby&cty=text HTTP/1.1
-Host pds.example.org
+PUT /user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
+Host: pds.example.org
 
 食っちゃ寝。
 ```
@@ -325,17 +330,19 @@ TA 間連携プロトコルの付加情報は省いている。
 HTTP/1.1 204 No Content
 ```
 
+
 ### 5.2. ディレクトリの作成
 
-ディレクトリを作成する。
+指定したディレクトリを作成する。
 
 
 #### 5.2.1. ディレクトリの作成例
 
+リクエストは、
 
 ```HTTP
 PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?recursive=true HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -354,14 +361,16 @@ HTTP/1.1 204 No Content
 
 ### 6.1. データの削除
 
-データを削除する。
+指定したデータを削除する。
 
 
 #### 6.1.1. データの削除例
 
+リクエストは、
+
 ```HTTP
 DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hoby HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -375,14 +384,16 @@ HTTP/1.1 204 No Content
 
 ### 6.2. ディレクトリの削除
 
-ディレクトリを削除する。
+指定したディレクトリを削除する。
 
 
 #### 6.2.1. ディレクトリの削除例
 
+リクエストは、
+
 ```HTTP
 DELETE /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/?recursive=true HTTP/1.1
-Host pds.example.org
+Host: pds.example.org
 ```
 
 TA 間連携プロトコルの付加情報は省いている。
@@ -392,4 +403,3 @@ TA 間連携プロトコルの付加情報は省いている。
 ```HTTP
 HTTP/1.1 204 No Content
 ```
-

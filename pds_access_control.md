@@ -140,6 +140,7 @@ Content-Type: application/json
 }
 ```
 
+
 ## 6. PDS へのリダイレクト
 
 要請元 TA は以下のパラメータと共にユーザーを PDS の変更エンドポイントへリダイレクトさせる。
