@@ -245,7 +245,13 @@ Content-Type: application/json
 
 ### 4.4. アクセス権限の読み取り
 
-アクセス権限を返す。
+アクセス権限の内、TA 間連携プロトコルで通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
+
+JSON オブジェクトは次の最上位要素からなる。
+
+* **`permission`**
+    * TA 間連携プロトコルで付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
+      特殊なユーザータグとして `*` は全てのユーザーを表す。
 
 
 #### 4.4.1. アクセス権限の読み取り例
@@ -266,7 +272,22 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "read": true
+    "permission": {
+        "self": {
+            "https://writer.example.org": {
+                "read": true,
+                "write": true
+            },
+            "https://reader.example.org": {
+                "read": true
+            }
+        },
+        "observer": {
+            "https://reader.example.org": {
+                "read": true
+            }
+        }
+    }
 }
 ```
 
@@ -274,6 +295,9 @@ Content-Type: application/json
 ### 4.5. 複合読み取り
 
 `rty` で複数情報を指定すれば、複合的な情報を取得できる。
+
+`metadata` と `permission` が同時に指定された場合、ひとまとめの JSON オブジェクトにして返す。
+また、`content` とその他の情報を同時に指定した場合、その他の情報は JWT で X-Pds-Datainfo ヘッダに格納して返す。
 
 
 #### 4.5.1. 複合読み取り例
@@ -294,8 +318,12 @@ TA 間連携プロトコルの付加情報は省いている。
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: plain/text
-X-PDS-Datainfo: {"name":"career","bytes":102,"created_at":"2013-03-09T18:44:40+0900",
-    "updated_at":"2014-01-15T10:23:09+0900","read":true}
+X-PDS-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
+    My0wOVQxODo0NDo0MCswOTAwIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsib2JzZXJ2
+    ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsicmVhZCI6dHJ1ZX19LCJzZWxmIjp7
+    Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQiOnRydWV9LCJodHRwczovL3dyaXRl
+    ci5leGFtcGxlLm9yZyI6eyJyZWFkIjp0cnVlLCJ3cml0ZSI6dHJ1ZX19fSwidXBkYXRlZF9hdCI6
+    IjIwMTQtMDEtMTVUMTA6MjM6MDkrMDkwMCJ9.
 
 2012/03 博士号取得
         無職
@@ -304,6 +332,32 @@ X-PDS-Datainfo: {"name":"career","bytes":102,"created_at":"2013-03-09T18:44:40+0
 ```
 
 ヘッダの改行とインデントは表示の都合による。
+JWT のクレームセットの内容は、
+
+```json
+{
+    "name": "career",
+    "bytes": 102,
+    "created_at": "2013-03-09T18:44:40+0900",
+    "updated_at": "2014-01-15T10:23:09+0900",
+    "permission": {
+        "self": {
+            "https://writer.example.org": {
+                "read": true,
+                "write": true
+            },
+            "https://reader.example.org": {
+                "read": true
+            }
+        },
+        "observer": {
+            "https://reader.example.org": {
+                "read": true
+            }
+        }
+    }
+}
+```
 
 
 ## 5. 書き込み・作成操作
