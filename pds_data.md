@@ -1,3 +1,20 @@
+<!--
+   Copyright 2015 realglobe, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+
 # PDS データアクセス API
 
 
@@ -5,7 +22,7 @@
 
 TA 間連携プロトコルの利用を前提とする。
 TA 間連携プロトコルにより、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
-加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報が揃う。
+加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
 ## 2. データ指定
@@ -136,12 +153,12 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 |ディレクトリ内読み込みタイプ|`dir_rty` に空白区切りで|`dir_rty` に配列で|
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
-ディレクトリでないデータ本体を除き、情報は全て JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は X-Pds-Datainfo ヘッダに入れて返す。
+ディレクトリでないデータ本体を除き、情報は基本 JSON で返す。
+読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は JWT で X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
-|X-Pds-Datainfo|メタデータやアクセス権限を表す JSON|
+|X-Pds-Datainfo|メタデータやアクセス権限を含む JWT|
 
 
 ### 4.1. データの読み取り
@@ -176,6 +193,15 @@ Content-Type: plain/text
 ### 4.2. ディレクトリの読み取り
 
 ディレクトリの中に入っているデータおよびディレクトリの情報を JSON 配列でレスポンスボディに入れて返す。
+データおよびディレクトリの情報は以下の最上位要素を含む。
+
+* **`name`**
+    * データおよびディレクトリの名前。
+* **`is_dir`**
+    * ディレクトリの場合のみ `true`。
+* **`children`**
+    * 再帰フラグが立っていて、かつ、ディレクトリの場合のみ。
+      ディレクトリ内のデータおよびディレクトリの情報。
 
 
 #### 4.2.1. ディレクトリの読み取り例
@@ -215,6 +241,18 @@ Content-Type: application/json
 ### 4.3. メタデータの読み取り
 
 サイズや更新日時等を JSON オブジェクトでレスポンスボディに入れて返す。
+メタデータは以下の最上位要素を含む。
+
+* **`name`**
+    * データおよびディレクトリの名前。
+* **`is_dir`**
+    * ディレクトリの場合のみ `true`。
+* **`bytes`**
+    * データサイズ。
+* **`created_at`**
+    * 作成日時。ISO 8601。
+* **`updated_at`**
+    * 更新日時。ISO 8601。
 
 
 #### 4.3.1. メタデータの読み取り例
@@ -252,6 +290,21 @@ JSON オブジェクトは次の最上位要素からなる。
 * **`permission`**
     * TA 間連携プロトコルで付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
       特殊なユーザータグとして `*` は全てのユーザーを表す。
+
+```json
+{
+    "permission": {
+        <ユーザータグ>: {
+            <アクセス元 TA の ID>: {
+                <権限>: true,
+                ...
+            },
+            ...
+        },
+        ...
+    }
+}
+```
 
 
 #### 4.4.1. アクセス権限の読み取り例
@@ -318,7 +371,7 @@ TA 間連携プロトコルの付加情報は省いている。
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: plain/text
-X-PDS-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
+X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     My0wOVQxODo0NDo0MCswOTAwIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsib2JzZXJ2
     ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsicmVhZCI6dHJ1ZX19LCJzZWxmIjp7
     Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQiOnRydWV9LCJodHRwczovL3dyaXRl
@@ -365,7 +418,7 @@ JWT のクレームセットの内容は、
 次の指定項目が追加される。
 
 * 親ディレクトリ作成フラグ
-    * 先祖ディレクトリを作成するかどうか。
+    * 必要なら親ディレクトリまでを作成するかどうか。
 
 指定方法は以下の通り。
 
@@ -425,6 +478,7 @@ HTTP/1.1 204 No Content
 ## 6. 削除操作
 
 指定項目として読み取り操作と同じ再帰フラグが追加される。
+空でないディレクトリを削除する場合、再帰フラグが必須になる。
 
 
 ### 6.1. データの削除
@@ -471,3 +525,8 @@ TA 間連携プロトコルの付加情報は省いている。
 ```HTTP
 HTTP/1.1 204 No Content
 ```
+
+
+## 7. エラーレスポンス
+
+エラーは OAuth 2.0 Section 5.2 の形式で返す。

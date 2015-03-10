@@ -1,3 +1,20 @@
+<!--
+   Copyright 2015 realglobe, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+
 # TA 間連携プロトコル
 
 TA から別の TA に処理を要請する際のプロトコル。
@@ -149,7 +166,7 @@ Content-Type: application/json
       `referral` でなければならない。
 * **`referral`**
     * 必須。
-      処理の主体の IdP が発行した `referral`。
+      処理の主体が属す IdP が発行した `referral`。
 * **`users`**
     * 必須。
       IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID へのマップ。
@@ -379,7 +396,7 @@ JWT の改行とインデントは表示の都合による。
 
 ## 6. 処理要請リクエスト
 
-要請元 TA から要請先 TA の処理エンドポイントに、IdP から受け取った全ての JWT を JSON 配列の形で付加してリクエストを送る。
+要請元 TA から要請先 TA の処理エンドポイントに、IdP から受け取った全ての `code_token` を JSON 配列の形で付加してリクエストを送る。
 
 付加は URL クエリか HTTP ヘッダにて行う。
 
@@ -516,7 +533,7 @@ Content-Type: application/json
         * **`ids`**
             * 必須。
               ユーザータグからユーザーの ID トークンに含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
-              処理の主体もそれ以外も一緒。
+              処理の主体もそれ以外も含む。
 
 
 ### 8.1. 処理の主体が属す IdP からの要請先仲介レスポンス例
@@ -611,3 +628,8 @@ JWT の改行とインデントは表示の都合による。
 ```
 
 署名に使用した鍵は処理の主体が属さない IdP からの要請元仲介レスポンス例と同じ。
+
+
+## 9. エラーレスポンス
+
+エラーは OAuth 2.0 の Section 5.2 の形式で返す。
