@@ -308,7 +308,16 @@ X-PDS-Datainfo: {"name":"career","bytes":102,"created_at":"2013-03-09T18:44:40+0
 
 ## 5. 書き込み・作成操作
 
-指定項目として読み取り操作と同じ再帰フラグが追加される。
+次の指定項目が追加される。
+
+* 親ディレクトリ作成フラグ
+    * 先祖ディレクトリを作成するかどうか。
+
+指定方法は以下の通り。
+
+|項目|URL パラメータ|JSON|
+|:--|:--|:--|
+|親ディレクトリ作成フラグ|`parents` に `true`/`false` で|`parents` に真偽値で|
 
 
 ### 5.1. データの書き込み
@@ -346,7 +355,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?recursive=true HTTP/1.1
+PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?parents=true HTTP/1.1
 Host: pds.example.org
 ```
 
