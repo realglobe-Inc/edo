@@ -183,7 +183,7 @@ Content-Type: plain/text
 リクエストは、
 
 ```HTTP
-GET /user/https%3A%2F%2Fwriter.example.org/profile/ HTTP/1.1
+GET /user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -201,7 +201,12 @@ Content-Type: application/json
     },
     {
         "name": "tmp",
-        "is_dir": true
+        "is_dir": true,
+        "children": [
+            {
+                "name": "test"
+            }
+        ]
     }
 ]
 ```
