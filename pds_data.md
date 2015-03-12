@@ -48,17 +48,26 @@ limitations under the License.
     * 任意。
       データの型。
       実際のデータの型と異なった場合は拒否される。
-      ディレクトリなら `directory`。
 
 
-### 2.1.1. 項目の例
+### 2.1.1. データタイプ
+
+以下のデータタイプを定義する。
+
+* **`directory`**
+    * ディレクトリ
+* **`octet-stream`**
+    * バイト列。
+
+
+### 2.1.2. 項目の例
 
 |項目|例|
 |:--|:--|
 |ユーザータグ|user|
 |TA の ID|https://writer.example.org|
 |パス|/profile/career|
-|データタイプ|text|
+|データタイプ|octet-stream|
 
 
 ### 2.2. URL による指定
@@ -78,7 +87,7 @@ limitations under the License.
 ### 2.2.1. URL による指定の例
 
 ```
-/user/https%3A%2F%2Fwriter.example.org/profile/career?cty=text
+/user/https%3A%2F%2Fwriter.example.org/profile/career?cty=octet-stream
 ```
 
 
@@ -103,7 +112,7 @@ limitations under the License.
     "user_tag": "user",
     "ta": "https://writer.example.org",
     "path": "/profile/career",
-    "cty": "text"
+    "cty": "octet-stream"
 }
 ```
 
@@ -181,7 +190,7 @@ Host: pds.example.org
 
 ```HTTP
 HTTP/1.1 200 OK
-Content-Type: plain/text
+Content-Type: application/octet-stream
 
 2012/03 博士号取得
         無職
@@ -197,8 +206,8 @@ Content-Type: plain/text
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`is_dir`**
-    * ディレクトリの場合のみ `true`。
+* **`cty`**
+    * データタイプ。
 * **`children`**
     * 再帰フラグが立っていて、かつ、ディレクトリの場合のみ。
       ディレクトリ内のデータおよびディレクトリの情報。
@@ -223,14 +232,16 @@ Content-Type: application/json
 
 [
     {
-        "name": "career"
+        "name": "career",
+        "cty": "octet-stream"
     },
     {
-        "name": "tmp",
-        "is_dir": true,
+        "name": "draft",
+        "cty": "directory",
         "children": [
             {
-                "name": "test"
+                "name": "family",
+                "cty": "octet-stream"
             }
         ]
     }
@@ -245,8 +256,8 @@ Content-Type: application/json
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`is_dir`**
-    * ディレクトリの場合のみ `true`。
+* **`cty`**
+    * データタイプ。
 * **`bytes`**
     * データサイズ。
 * **`created_at`**
@@ -274,6 +285,7 @@ Content-Type: application/json
 
 {
     "name": "career",
+    "cty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900"
@@ -370,13 +382,13 @@ Host: pds.example.org
 
 ```HTTP
 HTTP/1.1 200 OK
-Content-Type: plain/text
+Content-Type: application/octet-stream
 X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
-    My0wOVQxODo0NDo0MCswOTAwIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsib2JzZXJ2
-    ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsicmVhZCI6dHJ1ZX19LCJzZWxmIjp7
-    Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQiOnRydWV9LCJodHRwczovL3dyaXRl
-    ci5leGFtcGxlLm9yZyI6eyJyZWFkIjp0cnVlLCJ3cml0ZSI6dHJ1ZX19fSwidXBkYXRlZF9hdCI6
-    IjIwMTQtMDEtMTVUMTA6MjM6MDkrMDkwMCJ9.
+    My0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3RyZWFtIiwibmFtZSI6ImNhcmVlciIs
+    InBlcm1pc3Npb24iOnsib2JzZXJ2ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsi
+    cmVhZCI6dHJ1ZX19LCJzZWxmIjp7Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQi
+    OnRydWV9LCJodHRwczovL3dyaXRlci5leGFtcGxlLm9yZyI6eyJyZWFkIjp0cnVlLCJ3cml0ZSI6
+    dHJ1ZX19fSwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkrMDkwMCJ9.
 
 2012/03 博士号取得
         無職
@@ -391,6 +403,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 {
     "name": "career",
     "bytes": 102,
+    "cty": "octet-stream",
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900",
     "permission": {
@@ -430,6 +443,8 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ### 5.1. データの書き込み
 
 リクエストボディをそのまま書き込む。
+データタイプを指定しない場合、Content-Type ヘッダからデータタイプを推定する。
+推定不能な場合は `octet-stream` とみなす。
 
 
 #### 5.1.1. データの書き込み例
