@@ -1,17 +1,17 @@
 <!--
-   Copyright 2015 realglobe, Inc.
+Copyright 2015 realglobe, Inc.
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 -->
 
 
@@ -20,8 +20,8 @@
 
 ## 1. 概要
 
-TA 間連携プロトコルの利用を前提とする。
-TA 間連携プロトコルにより、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の利用を前提とする。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)により、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
 加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
@@ -35,7 +35,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 * ユーザータグ
     * 必須。
       アクセスするデータの保持者のユーザータグ。
-      TA 間連携プロトコルで付けたものと同じでなければならい。
+      [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたものと同じでなければならい。
 * TA の ID
     * 必須。
       アクセスするデータの領域を割り当てられた TA の ID。
@@ -48,17 +48,26 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
     * 任意。
       データの型。
       実際のデータの型と異なった場合は拒否される。
-      ディレクトリなら `directory`。
 
 
-### 2.1.1. 項目の例
+### 2.1.1. データタイプ
+
+以下のデータタイプを定義する。
+
+* **`directory`**
+    * ディレクトリ
+* **`octet-stream`**
+    * バイト列。
+
+
+### 2.1.2. 項目の例
 
 |項目|例|
 |:--|:--|
 |ユーザータグ|user|
 |TA の ID|https://writer.example.org|
 |パス|/profile/career|
-|データタイプ|text|
+|データタイプ|octet-stream|
 
 
 ### 2.2. URL による指定
@@ -78,7 +87,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 ### 2.2.1. URL による指定の例
 
 ```
-/user/https%3A%2F%2Fwriter.example.org/profile/career?cty=text
+/user/https%3A%2F%2Fwriter.example.org/profile/career?cty=octet-stream
 ```
 
 
@@ -103,7 +112,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
     "user_tag": "user",
     "ta": "https://writer.example.org",
     "path": "/profile/career",
-    "cty": "text"
+    "cty": "octet-stream"
 }
 ```
 
@@ -123,7 +132,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 
 * 読み込みタイプ
     * 任意。
-      読み込む情報の種類の配列。
+      読み込む情報の種類の集合。
       以下が存在し、無指定なら `content` のみとみなす。
         * `content`
             * データ本体。
@@ -134,8 +143,8 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 * ディレクトリ内読み込みタイプ
     * 対象がディレクトリなら任意。
       そうでなければ無し。
-      ディレクトリの中のデータおよび中のディレクトリに対して追加で読み込む情報の種類の配列。
-      以下が存在し、無指定なら名前とディレクトリかどうかのみ読み込む。
+      ディレクトリの中のデータおよび中のディレクトリに対して追加で読み込む情報の種類の集合。
+      以下が存在し、無指定なら名前とデータタイプのみ読み込む。
         * `metadata`
             * サイズ、更新日時等のメタデータ。
         * `permission`
@@ -154,11 +163,11 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
 ディレクトリでないデータ本体を除き、情報は基本 JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は JWT で X-Pds-Datainfo ヘッダに入れて返す。
+読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) にして X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
-|X-Pds-Datainfo|メタデータやアクセス権限を含む JWT|
+|X-Pds-Datainfo|メタデータやアクセス権限を含む [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)|
 
 
 ### 4.1. データの読み取り
@@ -175,13 +184,13 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
 ```HTTP
 HTTP/1.1 200 OK
-Content-Type: plain/text
+Content-Type: application/octet-stream
 
 2012/03 博士号取得
         無職
@@ -197,8 +206,8 @@ Content-Type: plain/text
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`is_dir`**
-    * ディレクトリの場合のみ `true`。
+* **`cty`**
+    * データタイプ。
 * **`children`**
     * 再帰フラグが立っていて、かつ、ディレクトリの場合のみ。
       ディレクトリ内のデータおよびディレクトリの情報。
@@ -213,7 +222,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -223,14 +232,16 @@ Content-Type: application/json
 
 [
     {
-        "name": "career"
+        "name": "career",
+        "cty": "octet-stream"
     },
     {
-        "name": "tmp",
-        "is_dir": true,
+        "name": "draft",
+        "cty": "directory",
         "children": [
             {
-                "name": "test"
+                "name": "family",
+                "cty": "octet-stream"
             }
         ]
     }
@@ -245,8 +256,8 @@ Content-Type: application/json
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`is_dir`**
-    * ディレクトリの場合のみ `true`。
+* **`cty`**
+    * データタイプ。
 * **`bytes`**
     * データサイズ。
 * **`created_at`**
@@ -264,7 +275,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -274,6 +285,7 @@ Content-Type: application/json
 
 {
     "name": "career",
+    "cty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900"
@@ -283,12 +295,12 @@ Content-Type: application/json
 
 ### 4.4. アクセス権限の読み取り
 
-アクセス権限の内、TA 間連携プロトコルで通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
+アクセス権限の内、[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
 
 JSON オブジェクトは次の最上位要素からなる。
 
 * **`permission`**
-    * TA 間連携プロトコルで付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
+    * [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
       特殊なユーザータグとして `*` は全てのユーザーを表す。
 
 ```json
@@ -350,7 +362,7 @@ Content-Type: application/json
 `rty` で複数情報を指定すれば、複合的な情報を取得できる。
 
 `metadata` と `permission` が同時に指定された場合、ひとまとめの JSON オブジェクトにして返す。
-また、`content` とその他の情報を同時に指定した場合、その他の情報は JWT で X-Pds-Datainfo ヘッダに格納して返す。
+また、`content` とその他の情報を同時に指定した場合、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) にして X-Pds-Datainfo ヘッダに入れて返す。
 
 
 #### 4.5.1. 複合読み取り例
@@ -364,19 +376,19 @@ Host: pds.example.org
 ```
 
 改行とインデントは表示の都合による。
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
 ```HTTP
 HTTP/1.1 200 OK
-Content-Type: plain/text
+Content-Type: application/octet-stream
 X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
-    My0wOVQxODo0NDo0MCswOTAwIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsib2JzZXJ2
-    ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsicmVhZCI6dHJ1ZX19LCJzZWxmIjp7
-    Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQiOnRydWV9LCJodHRwczovL3dyaXRl
-    ci5leGFtcGxlLm9yZyI6eyJyZWFkIjp0cnVlLCJ3cml0ZSI6dHJ1ZX19fSwidXBkYXRlZF9hdCI6
-    IjIwMTQtMDEtMTVUMTA6MjM6MDkrMDkwMCJ9.
+    My0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3RyZWFtIiwibmFtZSI6ImNhcmVlciIs
+    InBlcm1pc3Npb24iOnsib2JzZXJ2ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsi
+    cmVhZCI6dHJ1ZX19LCJzZWxmIjp7Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQi
+    OnRydWV9LCJodHRwczovL3dyaXRlci5leGFtcGxlLm9yZyI6eyJyZWFkIjp0cnVlLCJ3cml0ZSI6
+    dHJ1ZX19fSwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkrMDkwMCJ9.
 
 2012/03 博士号取得
         無職
@@ -385,12 +397,13 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ```
 
 ヘッダの改行とインデントは表示の都合による。
-JWT のクレームセットの内容は、
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) のクレームセットの内容は、
 
 ```json
 {
     "name": "career",
     "bytes": 102,
+    "cty": "octet-stream",
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900",
     "permission": {
@@ -430,6 +443,8 @@ JWT のクレームセットの内容は、
 ### 5.1. データの書き込み
 
 リクエストボディをそのまま書き込む。
+データタイプを指定しない場合、Content-Type ヘッダからデータタイプを推定する。
+推定不能な場合は `octet-stream` とみなす。
 
 
 #### 5.1.1. データの書き込み例
@@ -443,7 +458,7 @@ Host: pds.example.org
 食っちゃ寝。
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -466,7 +481,7 @@ PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?parents
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -491,11 +506,11 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hoby HTTP/1.1
+DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -514,11 +529,11 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/?recursive=true HTTP/1.1
+DELETE /user/https%3A%2F%2Fwriter.example.org/secret/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -529,4 +544,4 @@ HTTP/1.1 204 No Content
 
 ## 7. エラーレスポンス
 
-エラーは OAuth 2.0 Section 5.2 の形式で返す。
+エラーは [OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式で返す。
