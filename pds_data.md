@@ -20,8 +20,8 @@ limitations under the License.
 
 ## 1. 概要
 
-TA 間連携プロトコルの利用を前提とする。
-TA 間連携プロトコルにより、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の利用を前提とする。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)により、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
 加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
@@ -35,7 +35,7 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 * ユーザータグ
     * 必須。
       アクセスするデータの保持者のユーザータグ。
-      TA 間連携プロトコルで付けたものと同じでなければならい。
+      [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたものと同じでなければならい。
 * TA の ID
     * 必須。
       アクセスするデータの領域を割り当てられた TA の ID。
@@ -154,11 +154,11 @@ TA 間連携プロトコルにより、アクセスの主体となるユーザ�
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
 ディレクトリでないデータ本体を除き、情報は基本 JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は JWT で X-Pds-Datainfo ヘッダに入れて返す。
+読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) で X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
-|X-Pds-Datainfo|メタデータやアクセス権限を含む JWT|
+|X-Pds-Datainfo|メタデータやアクセス権限を含む [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)|
 
 
 ### 4.1. データの読み取り
@@ -175,7 +175,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -213,7 +213,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -264,7 +264,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -283,12 +283,12 @@ Content-Type: application/json
 
 ### 4.4. アクセス権限の読み取り
 
-アクセス権限の内、TA 間連携プロトコルで通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
+アクセス権限の内、[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
 
 JSON オブジェクトは次の最上位要素からなる。
 
 * **`permission`**
-    * TA 間連携プロトコルで付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
+    * [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
       特殊なユーザータグとして `*` は全てのユーザーを表す。
 
 ```json
@@ -350,7 +350,7 @@ Content-Type: application/json
 `rty` で複数情報を指定すれば、複合的な情報を取得できる。
 
 `metadata` と `permission` が同時に指定された場合、ひとまとめの JSON オブジェクトにして返す。
-また、`content` とその他の情報を同時に指定した場合、その他の情報は JWT で X-Pds-Datainfo ヘッダに格納して返す。
+また、`content` とその他の情報を同時に指定した場合、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) にして X-Pds-Datainfo ヘッダに入れて返す。
 
 
 #### 4.5.1. 複合読み取り例
@@ -364,7 +364,7 @@ Host: pds.example.org
 ```
 
 改行とインデントは表示の都合による。
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -385,7 +385,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ```
 
 ヘッダの改行とインデントは表示の都合による。
-JWT のクレームセットの内容は、
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) のクレームセットの内容は、
 
 ```json
 {
@@ -443,7 +443,7 @@ Host: pds.example.org
 食っちゃ寝。
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -466,7 +466,7 @@ PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?parents
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -495,7 +495,7 @@ DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hoby HTTP/1.1
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -518,7 +518,7 @@ DELETE /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/?recursive=true HTT
 Host: pds.example.org
 ```
 
-TA 間連携プロトコルの付加情報は省いている。
+[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
 
 レスポンスは、
 
@@ -529,4 +529,4 @@ HTTP/1.1 204 No Content
 
 ## 7. エラーレスポンス
 
-エラーは OAuth 2.0 Section 5.2 の形式で返す。
+エラーは [OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式で返す。

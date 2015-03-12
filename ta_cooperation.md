@@ -124,7 +124,7 @@ TA から別の TA に処理を要請する際のプロトコル。
       関連するユーザーが属す他の全ての IdP の ID の配列。
 
 
-リクエスト時の TA 認証は必須であり、OpenID Connect 1.0 で定義されているクライアント認証方式を利用する。
+リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9](http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) で定義されているクライアント認証方式を利用する。
 その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
@@ -171,7 +171,7 @@ Content-Type: application/json
     * 必須。
       IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID へのマップ。
 
-リクエスト時の TA 認証は必須であり、OpenID Connect 1.0 で定義されているクライアント認証方式を利用する。
+リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9](http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) で定義されているクライアント認証方式を利用する。
 その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
@@ -208,7 +208,7 @@ Content-Type: application/json
 * **`code_token`**
     * リクエストの `response_type` が `code_token` を含む場合は必須。
       そうでなければ無し。
-      以下のクレームを含む署名済み JWT。
+      以下のクレームを含む署名済み [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)。
         * **`iss`**
             * 必須。
               IdP の ID。
@@ -229,7 +229,7 @@ Content-Type: application/json
 * **`referral`**
     * リクエストの `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
-      以下のクレームを含む署名済み JWT。
+      以下のクレームを含む署名済み [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)。
         * **`iss`**
             * 必須。
               IdP の ID。
@@ -241,10 +241,10 @@ Content-Type: application/json
               リクエストの `related_idps` の内容そのまま。
         * **`exp`**
             * 必須。
-              JWT の `exp`。
+              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `exp` と同じもの。
         * **`jti`**
             * 必須。
-              JWT の `jti`。
+              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `jti` と同じもの。
         * **`to_ta`**
             * 必須。
               リクエストの `to_ta` の値そのまま。
@@ -278,7 +278,7 @@ Content-Type: application/json
 }
 ```
 
-JWT の改行とインデントは表示の都合による。
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
 
 `code_token` のクレームセットの内容は、
 
@@ -344,7 +344,7 @@ Content-Type: application/json
 }
 ```
 
-JWT の改行とインデントは表示の都合による。
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
 
 `code_token` のクレームセットの内容は、
 
@@ -431,7 +431,7 @@ JWT の改行とインデントは表示の都合による。
 ]
 ```
 
-JWT の改行とインデントは表示の都合による。
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
 付加の際は適切にエスケープする。
 
 
@@ -448,13 +448,13 @@ JWT の改行とインデントは表示の都合による。
 * **`claims`**
     * 仲介コードに `user_tag` が付いていた場合は任意。
       そうでなければ無し。
-      処理の主体に対する OpenID Connect 1.0 の `claims` パラメータと同じ。
+      処理の主体に対する [OpenID Connect Core 1.0 Section 5.5](http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter) の `claims` パラメータと同じ。
 * **`user_claims`**
     * 仲介コードに `user_tags` が付いていた場合は任意。
       そうでなければ無し。
-      ユーザータグから OpenID Connect 1.0 の `claims` パラメータの `id_token` オブジェクトと同じものへのマップ。
+      ユーザータグから [OpenID Connect Core 1.0 Section 5.5](http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter) の `claims` パラメータの `id_token` 要素と同じものへのマップ。
 
-リクエスト時の TA 認証は必須であり、OpenID Connect 1.0 で定義されているクライアント認証方式を利用する。
+リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9](http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) で定義されているクライアント認証方式を利用する。
 その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 要求したクレームに対する事前同意が無ければ拒否される。
@@ -508,15 +508,15 @@ Content-Type: application/json
       新しく発行した処理の主体に対するアクセストークン。
 * **`token_type`**
     * `access_token` が含まれる場合のみ。
-      OAuth 2.0 の `token_type` と同じもの。
+      [OAuth 2.0 Section 5.1](http://tools.ietf.org/html/rfc6749#section-5.1) の `token_type` と同じもの。
 * **`expires_in`**
     * `access_token` が含まれる場合のみ。
-      OAuth 2.0 の `expires_in` と同じもの。
+      [OAuth 2.0 Section 5.1](http://tools.ietf.org/html/rfc6749#section-5.1) の `expires_in` と同じもの。
 * **`scope`**
     * `access_token` が含まれる場合のみ。
-      OAuth 2.0 の `scope` と同じもの。
+      [OAuth 2.0 Section 5.1](http://tools.ietf.org/html/rfc6749#section-5.1) の `scope` と同じもの。
 * **`ids_token`**
-    * 以下のクレームを含む署名済み JWT。
+    * 以下のクレームを含む署名済み [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)。
         * **`iss`**
             * 必須。
               IdP の ID。
@@ -527,12 +527,14 @@ Content-Type: application/json
             * 必須。
               要請先 TA の ID。
         * **`exp`**
-            * ID トークンの `exp` と同じもの。
+            * 必須。
+              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `exp` と同じもの。
         * **`iat`**
-            * ID トークンの `iat` と同じもの。
+            * 必須。
+              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `iat` と同じもの。
         * **`ids`**
             * 必須。
-              ユーザータグからユーザーの ID トークンに含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
+              ユーザータグからユーザーの [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)に含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
               処理の主体もそれ以外も含む。
 
 
@@ -556,7 +558,7 @@ Content-Type: application/json
 }
 ```
 
-JWT の改行とインデントは表示の都合による。
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
 
 `ids_token` のクレームセットの内容は、
 
@@ -608,7 +610,7 @@ Content-Type: application/json
 }
 ```
 
-JWT の改行とインデントは表示の都合による。
+[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
 
 `ids_token` のクレームセットの内容は、
 
@@ -632,4 +634,4 @@ JWT の改行とインデントは表示の都合による。
 
 ## 9. エラーレスポンス
 
-エラーは OAuth 2.0 の Section 5.2 の形式で返す。
+エラーは [OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式で返す。
