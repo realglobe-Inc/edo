@@ -132,7 +132,7 @@ limitations under the License.
 
 * 読み込みタイプ
     * 任意。
-      読み込む情報の種類の配列。
+      読み込む情報の種類の集合。
       以下が存在し、無指定なら `content` のみとみなす。
         * `content`
             * データ本体。
@@ -143,8 +143,8 @@ limitations under the License.
 * ディレクトリ内読み込みタイプ
     * 対象がディレクトリなら任意。
       そうでなければ無し。
-      ディレクトリの中のデータおよび中のディレクトリに対して追加で読み込む情報の種類の配列。
-      以下が存在し、無指定なら名前とディレクトリかどうかのみ読み込む。
+      ディレクトリの中のデータおよび中のディレクトリに対して追加で読み込む情報の種類の集合。
+      以下が存在し、無指定なら名前とデータタイプのみ読み込む。
         * `metadata`
             * サイズ、更新日時等のメタデータ。
         * `permission`
@@ -163,7 +163,7 @@ limitations under the License.
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
 ディレクトリでないデータ本体を除き、情報は基本 JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) で X-Pds-Datainfo ヘッダに入れて返す。
+読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) にして X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
@@ -506,7 +506,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hoby HTTP/1.1
+DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -529,7 +529,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/?recursive=true HTTP/1.1
+DELETE /user/https%3A%2F%2Fwriter.example.org/secret/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 

@@ -50,7 +50,7 @@ limitations under the License.
 
 本プロトコルでは、途中、[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)と[ユーザー認証プロトコル](https://github.com/realglobe-Inc/edo/blob/master/user_authentication.md)を利用する。
 
-要請元 TA から PDS への変更内容の通知は TA 間連携の上で行われ、PDS とユーザー間で合意を形成する前にユーザー認証が行われる。
+要請元 TA から PDS への変更内容の通知は TA 間連携で行われ、PDS とユーザー間で合意を形成する前にユーザー認証が行われる。
 
 
 ## 3. 変更対象タグ
@@ -85,7 +85,7 @@ limitations under the License.
         * `mod`
             * 必須。
               変更する権限。
-              [+-=][rw]+。
+              `[+-=][rw]+`。
               `+r` 等。
         * `recursive`
             * 対象がディレクトリなら任意。
@@ -121,13 +121,15 @@ Content-Type: application/json
             "ta": "https://writer.example.org",
             "path": "/profile",
             "mod": "+r",
+            "recursive": true,
             "essential": true
         },
         "diary": {
             "user_tag": "user",
             "ta": "https://writer.example.org",
             "path": "/diary",
-            "mod": "+r"
+            "mod": "+r",
+            "recursive": true
         }
     },
     "redirect_uri": "https://reader.example.org/return/chmod",
