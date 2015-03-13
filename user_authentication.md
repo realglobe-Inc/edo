@@ -17,4 +17,10 @@ limitations under the License.
 
 # ユーザー認証プロトコル
 
-[OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html) の [Code Flow](http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth) および、認証リクエストの `response_type` パラメータに `code id_token` を指定した [Hybrid Flow](http://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth) に対応する。
+[OpenID Connect Core 1.0] の [Code Flow] および、認証リクエストの `response_type` パラメータに `code id_token` を指定した [Hybrid Flow] に対応する。
+
+
+<!-- 参照 -->
+[Code Flow]: http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
+[Hybrid Flow]: http://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth
+[OpenID Connect Core 1.0]: http://openid.net/specs/openid-connect-core-1_0.html

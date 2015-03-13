@@ -48,7 +48,7 @@ limitations under the License.
 
 ## 2. TA 間連携とユーザー認証
 
-本プロトコルでは、途中、[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)と[ユーザー認証プロトコル](https://github.com/realglobe-Inc/edo/blob/master/user_authentication.md)を利用する。
+本プロトコルでは、途中、[TA 間連携プロトコル]と[ユーザー認証プロトコル]を利用する。
 
 要請元 TA から PDS への変更内容の通知は TA 間連携で行われ、PDS とユーザー間で合意を形成する前にユーザー認証が行われる。
 
@@ -60,8 +60,8 @@ limitations under the License.
 
 ## 4. 変更要請リクエスト
 
-要請元 TA から PDS の変更要請エンドポイントに、[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報と共に、以下の最上位要素を含む JSON オブジェクトを送る。
-ユーザータグは [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたものと同じでなければならない。
+要請元 TA から PDS の変更要請エンドポイントに、[TA 間連携プロトコル]の付加情報と共に、以下の最上位要素を含む JSON オブジェクトを送る。
+ユーザータグは [TA 間連携プロトコル]で付けたものと同じでなければならない。
 
 * **`chmod`**
     * 必須。
@@ -102,9 +102,9 @@ limitations under the License.
     * 任意。
       PDS から要請元 TA にユーザーをリダイレクトさせる際にそのまま付加されるパラメータ。
 * **`display`**
-    * [OpenID Connect Core 1.0 Section 3.1.2.1](http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) の `display` と同じ。
+    * [OpenID Connect Core 1.0 Section 3.1.2.1] の `display` と同じ。
 * **`ui_locales`**
-    * [OpenID Connect Core 1.0 Section 3.1.2.1](http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) の `ui_locales` と同じ。
+    * [OpenID Connect Core 1.0 Section 3.1.2.1] の `ui_locales` と同じ。
 
 
 ### 4.1. 変更要請リクエストの例
@@ -137,7 +137,7 @@ Content-Type: application/json
 }
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 
 ## 5. 変更要請レスポンス
@@ -264,6 +264,14 @@ Location: https://reader.example.org/return/chmod?
 
 ## 9. エラーレスポンス
 
-変更要請リクエストに対するエラーは [OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式で返す。
-合意中のエラーは [OAuth 2.0 Section 4.1.2.1](http://tools.ietf.org/html/rfc6749#section-4.1.2.1) の形式で要請元 TA にリダイレクトして返す。
-ただし、変更コードが正しいリダイレクト URI に紐付いていなかった場合は、[OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式でユーザーに返す。
+変更要請リクエストに対するエラーは [OAuth 2.0 Section 5.2] の形式で返す。
+合意中のエラーは [OAuth 2.0 Section 4.1.2.1] の形式で要請元 TA にリダイレクトして返す。
+ただし、変更コードが正しいリダイレクト URI に紐付いていなかった場合は、[OAuth 2.0 Section 5.2] の形式でユーザーに返す。
+
+
+<!-- 参照 -->
+[OAuth 2.0 Section 4.1.2.1]: http://tools.ietf.org/html/rfc6749#section-4.1.2.1
+[OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
+[OpenID Connect Core 1.0 Section 3.1.2.1]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+[TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
+[ユーザー認証プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/user_authentication.md
