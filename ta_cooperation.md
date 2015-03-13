@@ -30,7 +30,7 @@ TA から別の TA に処理を要請する際のプロトコル。
 2. 要請元 TA から要請先 TA に、全ての仲介コードを渡す。
 3. 全ての仲介コードについて次の 1, 2 を行う。
     1. 要請先 TA から仲介コードを発行した IdP に、仲介コードを提示する。
-    2. IdP から要請先 TA に、要請元 TA と仲介コードに紐付くユーザーの情報を渡す。
+    2. IdP から要請先 TA に、仲介コードに紐付くユーザーと要請元 TA の情報を渡す。
 
 ```
 +--------+                                                     +--------+
@@ -60,7 +60,7 @@ TA から別の TA に処理を要請する際のプロトコル。
 関連するユーザーは、処理の主体とそれ以外に分ける。
 
 * **処理の主体**
-    * ユーザー認証を通り、アクセストークンを要請元 TA に渡して処理の引き金になるアクセスを行ったユーザー。
+    * ユーザー認証を通り、アクセストークンを要請元 TA に渡し、処理の引き金になるアクセスを行ったユーザー。
 * **処理の主体でないユーザー**
     * 処理の対象となるユーザー等。
 
@@ -85,7 +85,7 @@ TA から別の TA に処理を要請する際のプロトコル。
 
 * **`response_type`**
     * 必須。
-      他の IdP に属す関連するユーザーがいない場合は `code_token`、いる場合は `code_token referral` でなければならない。
+      関連するユーザーが他の IdP に属さない場合は `code_token`、属す場合は `code_token referral` でなければならない。
 * **`to_ta`**
     * 必須。
       要請先 TA の ID。
@@ -118,13 +118,14 @@ TA から別の TA に処理を要請する際のプロトコル。
     * `related_users` におけるユーザー ID のハッシュ値計算アルゴリズムが IdP 側のデフォルトと異なる場合は必須。
       同じであれば任意。
       そうでなければ無し。
+      `related_users` におけるユーザー ID のハッシュ値計算アルゴリズム。
 * **`related_idps`**
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
       関連するユーザーが属す他の全ての IdP の ID の配列。
 
 
-リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9](http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) で定義されているクライアント認証方式を利用する。
+リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
 その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
@@ -153,6 +154,8 @@ Content-Type: application/json
 }
 ```
 
+TA 認証用データは省いている。
+
 
 ### 4.2. 処理の主体が属さない IdP への要請元仲介リクエスト
 
@@ -171,7 +174,7 @@ Content-Type: application/json
     * 必須。
       IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID へのマップ。
 
-リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9](http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) で定義されているクライアント認証方式を利用する。
+リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
 その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
@@ -199,6 +202,7 @@ Content-Type: application/json
 ```
 
 `referral` は処理の主体が属す IdP からの要請元仲介レスポンス例のもの。
+TA 認証用データは省いている。
 
 
 ## 5. 要請元仲介レスポンス
@@ -208,7 +212,7 @@ Content-Type: application/json
 * **`code_token`**
     * リクエストの `response_type` が `code_token` を含む場合は必須。
       そうでなければ無し。
-      以下のクレームを含む署名済み [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)。
+      以下のクレームを含む署名済み [JWT]。
         * **`iss`**
             * 必須。
               IdP の ID。
@@ -229,7 +233,7 @@ Content-Type: application/json
 * **`referral`**
     * リクエストの `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
-      以下のクレームを含む署名済み [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)。
+      以下のクレームを含む署名済み [JWT]。
         * **`iss`**
             * 必須。
               IdP の ID。
@@ -241,10 +245,10 @@ Content-Type: application/json
               リクエストの `related_idps` の内容そのまま。
         * **`exp`**
             * 必須。
-              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `exp` と同じもの。
+              [ID トークン]の `exp` と同じもの。
         * **`jti`**
             * 必須。
-              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `jti` と同じもの。
+              [ID トークン]の `jti` と同じもの。
         * **`to_ta`**
             * 必須。
               リクエストの `to_ta` の値そのまま。
@@ -278,7 +282,7 @@ Content-Type: application/json
 }
 ```
 
-[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
+[JWT] の改行とインデントは表示の都合による。
 
 `code_token` のクレームセットの内容は、
 
@@ -344,7 +348,7 @@ Content-Type: application/json
 }
 ```
 
-[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
+[JWT] の改行とインデントは表示の都合による。
 
 `code_token` のクレームセットの内容は、
 
@@ -431,7 +435,7 @@ Content-Type: application/json
 ]
 ```
 
-[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
+[JWT] の改行とインデントは表示の都合による。
 付加の際は適切にエスケープする。
 
 
@@ -448,13 +452,13 @@ Content-Type: application/json
 * **`claims`**
     * 仲介コードに `user_tag` が付いていた場合は任意。
       そうでなければ無し。
-      処理の主体に対する [OpenID Connect Core 1.0 Section 5.5](http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter) の `claims` パラメータと同じ。
+      処理の主体に対する [OpenID Connect Core 1.0 Section 5.5] の `claims` パラメータと同じ。
 * **`user_claims`**
     * 仲介コードに `user_tags` が付いていた場合は任意。
       そうでなければ無し。
-      ユーザータグから [OpenID Connect Core 1.0 Section 5.5](http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter) の `claims` パラメータの `id_token` 要素と同じものへのマップ。
+      ユーザータグから [OpenID Connect Core 1.0 Section 5.5] の `claims` パラメータの `id_token` 要素と同じものへのマップ。
 
-リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9](http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) で定義されているクライアント認証方式を利用する。
+リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
 その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 要求したクレームに対する事前同意が無ければ拒否される。
@@ -483,6 +487,8 @@ Content-Type: application/json
 }
 ```
 
+TA 認証用データは省いている。
+
 
 ### 7.2. 処理の主体が属さない IdP への要請先仲介リクエスト例
 
@@ -497,6 +503,8 @@ Content-Type: application/json
 }
 ```
 
+TA 認証用データは省いている。
+
 
 ## 8. 要請先仲介レスポンス
 
@@ -508,15 +516,15 @@ Content-Type: application/json
       新しく発行した処理の主体に対するアクセストークン。
 * **`token_type`**
     * `access_token` が含まれる場合のみ。
-      [OAuth 2.0 Section 5.1](http://tools.ietf.org/html/rfc6749#section-5.1) の `token_type` と同じもの。
+      [OAuth 2.0 Section 5.1] の `token_type` と同じもの。
 * **`expires_in`**
     * `access_token` が含まれる場合のみ。
-      [OAuth 2.0 Section 5.1](http://tools.ietf.org/html/rfc6749#section-5.1) の `expires_in` と同じもの。
+      [OAuth 2.0 Section 5.1] の `expires_in` と同じもの。
 * **`scope`**
     * `access_token` が含まれる場合のみ。
-      [OAuth 2.0 Section 5.1](http://tools.ietf.org/html/rfc6749#section-5.1) の `scope` と同じもの。
+      [OAuth 2.0 Section 5.1] の `scope` と同じもの。
 * **`ids_token`**
-    * 以下のクレームを含む署名済み [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)。
+    * 以下のクレームを含む署名済み [JWT]。
         * **`iss`**
             * 必須。
               IdP の ID。
@@ -528,14 +536,14 @@ Content-Type: application/json
               要請先 TA の ID。
         * **`exp`**
             * 必須。
-              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `exp` と同じもの。
+              [ID トークン]の `exp` と同じもの。
         * **`iat`**
             * 必須。
-              [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)の `iat` と同じもの。
+              [ID トークン]の `iat` と同じもの。
         * **`ids`**
             * 必須。
-              ユーザータグからユーザーの [ID トークン](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)に含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
-              処理の主体もそれ以外も含む。
+              ユーザータグからユーザーの [ID トークン]に含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
+              処理の主体のものもそれ以外のものも含む。
 
 
 ### 8.1. 処理の主体が属す IdP からの要請先仲介レスポンス例
@@ -558,7 +566,7 @@ Content-Type: application/json
 }
 ```
 
-[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
+[JWT] の改行とインデントは表示の都合による。
 
 `ids_token` のクレームセットの内容は、
 
@@ -610,7 +618,7 @@ Content-Type: application/json
 }
 ```
 
-[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) の改行とインデントは表示の都合による。
+[JWT] の改行とインデントは表示の都合による。
 
 `ids_token` のクレームセットの内容は、
 
@@ -634,4 +642,13 @@ Content-Type: application/json
 
 ## 9. エラーレスポンス
 
-エラーは [OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式で返す。
+エラーは [OAuth 2.0 Section 5.2] の形式で返す。
+
+
+<!-- 参照 -->
+[ID トークン]: http://openid.net/specs/openid-connect-core-1_0.html#IDToken
+[JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
+[OAuth 2.0 Section 5.1]: http://tools.ietf.org/html/rfc6749#section-5.1
+[OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
+[OpenID Connect Core 1.0 Section 5.5]: http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter
+[OpenID Connect Core 1.0 Section 9]: http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication

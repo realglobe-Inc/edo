@@ -20,8 +20,8 @@ limitations under the License.
 
 ## 1. 概要
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の利用を前提とする。
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)により、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
+[TA 間連携プロトコル]の利用を前提とする。
+[TA 間連携プロトコル]により、アクセスの主体となるユーザーおよびアクセス元 TA が PDS に通知される。
 加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
@@ -35,7 +35,7 @@ limitations under the License.
 * ユーザータグ
     * 必須。
       アクセスするデータの保持者のユーザータグ。
-      [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたものと同じでなければならい。
+      [TA 間連携プロトコル]で付けたユーザータグでなければならい。
 * TA の ID
     * 必須。
       アクセスするデータの領域を割り当てられた TA の ID。
@@ -67,12 +67,12 @@ limitations under the License.
 |ユーザータグ|user|
 |TA の ID|https://writer.example.org|
 |パス|/profile/career|
-|データタイプ|octet-stream|
+|データタイプ|`octet-stream`|
 
 
 ### 2.2. URL による指定
 
-ユーザータグ、TA の ID をパーセントエンコードした上で、パスと共に以下のように指定する。
+ユーザータグと TA の ID を [URL エンコード]した上で、パスと共に以下のように指定する。
 
 ```
 /<ユーザータグ>/<TA の ID><パス>
@@ -80,14 +80,14 @@ limitations under the License.
 
 データタイプは以下のパラメータで指定する。
 
-* **`cty`**
+* **`dty`**
     * データタイプ。
 
 
 ### 2.2.1. URL による指定の例
 
 ```
-/user/https%3A%2F%2Fwriter.example.org/profile/career?cty=octet-stream
+/user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
@@ -101,7 +101,7 @@ limitations under the License.
     * TA の ID。
 * **`path`**
     * パス。
-* **`cty`**
+* **`dty`**
     * データタイプ。
 
 
@@ -112,7 +112,7 @@ limitations under the License.
     "user_tag": "user",
     "ta": "https://writer.example.org",
     "path": "/profile/career",
-    "cty": "octet-stream"
+    "dty": "octet-stream"
 }
 ```
 
@@ -163,11 +163,11 @@ limitations under the License.
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
 ディレクトリでないデータ本体を除き、情報は基本 JSON で返す。
-読み込みタイプが content を含む場合、データ本体はレスポンスボディに、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) にして X-Pds-Datainfo ヘッダに入れて返す。
+読み込みタイプが `content` を含む場合、データ本体はレスポンスボディに、その他の情報は [JWT] にして X-Pds-Datainfo ヘッダに入れて返す。
 
 |ヘッダ名|値|
 |:--|:--|
-|X-Pds-Datainfo|メタデータやアクセス権限を含む [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)|
+|X-Pds-Datainfo|メタデータやアクセス権限を含む [JWT]|
 
 
 ### 4.1. データの読み取り
@@ -184,7 +184,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
 Host: pds.example.org
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -206,7 +206,7 @@ Content-Type: application/octet-stream
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`cty`**
+* **`dty`**
     * データタイプ。
 * **`children`**
     * 再帰フラグが立っていて、かつ、ディレクトリの場合のみ。
@@ -222,7 +222,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -233,15 +233,15 @@ Content-Type: application/json
 [
     {
         "name": "career",
-        "cty": "octet-stream"
+        "dty": "octet-stream"
     },
     {
         "name": "draft",
-        "cty": "directory",
+        "dty": "directory",
         "children": [
             {
                 "name": "family",
-                "cty": "octet-stream"
+                "dty": "octet-stream"
             }
         ]
     }
@@ -256,14 +256,14 @@ Content-Type: application/json
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`cty`**
+* **`dty`**
     * データタイプ。
 * **`bytes`**
     * データサイズ。
 * **`created_at`**
-    * 作成日時。ISO 8601。
+    * 作成日時。[RFC3339] 形式。
 * **`updated_at`**
-    * 更新日時。ISO 8601。
+    * 更新日時。[RFC3339] 形式。
 
 
 #### 4.3.1. メタデータの読み取り例
@@ -275,7 +275,7 @@ GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
 Host: pds.example.org
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -285,7 +285,7 @@ Content-Type: application/json
 
 {
     "name": "career",
-    "cty": "octet-stream",
+    "dty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900"
@@ -295,13 +295,13 @@ Content-Type: application/json
 
 ### 4.4. アクセス権限の読み取り
 
-アクセス権限の内、[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
+アクセス権限の内、[TA 間連携プロトコル]で通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
 
-JSON オブジェクトは次の最上位要素からなる。
+アクセス権限は次の最上位要素からなる。
 
 * **`permission`**
-    * [TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)で付けたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
-      特殊なユーザータグとして `*` は全てのユーザーを表す。
+    * [TA 間連携プロトコル]で付けられたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
+      特殊な値として `*` で全てのユーザーの権限を示す。
 
 ```json
 {
@@ -314,6 +314,13 @@ JSON オブジェクトは次の最上位要素からなる。
             ...
         },
         ...
+        "*": {
+            <アクセス元 TA の ID>: {
+                <権限>: true,
+                ...
+            },
+            ...
+        }
     }
 }
 ```
@@ -359,10 +366,10 @@ Content-Type: application/json
 
 ### 4.5. 複合読み取り
 
-`rty` で複数情報を指定すれば、複合的な情報を取得できる。
+`rty` で複数情報を指定することで、複合的な情報を取得できる。
 
-`metadata` と `permission` が同時に指定された場合、ひとまとめの JSON オブジェクトにして返す。
-また、`content` とその他の情報を同時に指定した場合、その他の情報は [JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) にして X-Pds-Datainfo ヘッダに入れて返す。
+`metadata` と `permission` が同時に指定された場合、ひとまとめの JSON オブジェクトにする。
+また、`content` とその他の情報を同時に指定された場合、その他の情報は [JWT] にして X-Pds-Datainfo ヘッダに入れる。
 
 
 #### 4.5.1. 複合読み取り例
@@ -376,7 +383,7 @@ Host: pds.example.org
 ```
 
 改行とインデントは表示の都合による。
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -397,13 +404,13 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ```
 
 ヘッダの改行とインデントは表示の都合による。
-[JWT](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32) のクレームセットの内容は、
+[JWT] のクレームセットの内容は、
 
 ```json
 {
     "name": "career",
     "bytes": 102,
-    "cty": "octet-stream",
+    "dty": "octet-stream",
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900",
     "permission": {
@@ -431,7 +438,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 次の指定項目が追加される。
 
 * 親ディレクトリ作成フラグ
-    * 必要なら親ディレクトリまでを作成するかどうか。
+    * 対象のデータおよびディレクトリを置くディレクトリが存在しない場合に、必要なディレクトリを作成するかどうか。
 
 指定方法は以下の通り。
 
@@ -458,7 +465,7 @@ Host: pds.example.org
 食っちゃ寝。
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -481,7 +488,7 @@ PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?parents
 Host: pds.example.org
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -493,7 +500,7 @@ HTTP/1.1 204 No Content
 ## 6. 削除操作
 
 指定項目として読み取り操作と同じ再帰フラグが追加される。
-空でないディレクトリを削除する場合、再帰フラグが必須になる。
+空でないディレクトリを削除する場合、再帰フラグは必須とする。
 
 
 ### 6.1. データの削除
@@ -510,7 +517,7 @@ DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -533,7 +540,7 @@ DELETE /user/https%3A%2F%2Fwriter.example.org/secret/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
-[TA 間連携プロトコル](https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md)の付加情報は省いている。
+[TA 間連携プロトコル]の付加情報は省いている。
 
 レスポンスは、
 
@@ -544,4 +551,12 @@ HTTP/1.1 204 No Content
 
 ## 7. エラーレスポンス
 
-エラーは [OAuth 2.0 Section 5.2](http://tools.ietf.org/html/rfc6749#section-5.2) の形式で返す。
+エラーは [OAuth 2.0 Section 5.2] の形式で返す。
+
+
+<!-- 参照 -->
+[JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
+[OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
+[RFC3339]: http://tools.ietf.org/html/rfc3339
+[TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
+[URL エンコード]: http://tools.ietf.org/html/rfc1866#section-8.2.1
