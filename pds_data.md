@@ -80,14 +80,14 @@ limitations under the License.
 
 データタイプは以下のパラメータで指定する。
 
-* **`cty`**
+* **`dty`**
     * データタイプ。
 
 
 ### 2.2.1. URL による指定の例
 
 ```
-/user/https%3A%2F%2Fwriter.example.org/profile/career?cty=octet-stream
+/user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
@@ -101,7 +101,7 @@ limitations under the License.
     * TA の ID。
 * **`path`**
     * パス。
-* **`cty`**
+* **`dty`**
     * データタイプ。
 
 
@@ -112,7 +112,7 @@ limitations under the License.
     "user_tag": "user",
     "ta": "https://writer.example.org",
     "path": "/profile/career",
-    "cty": "octet-stream"
+    "dty": "octet-stream"
 }
 ```
 
@@ -206,7 +206,7 @@ Content-Type: application/octet-stream
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`cty`**
+* **`dty`**
     * データタイプ。
 * **`children`**
     * 再帰フラグが立っていて、かつ、ディレクトリの場合のみ。
@@ -233,15 +233,15 @@ Content-Type: application/json
 [
     {
         "name": "career",
-        "cty": "octet-stream"
+        "dty": "octet-stream"
     },
     {
         "name": "draft",
-        "cty": "directory",
+        "dty": "directory",
         "children": [
             {
                 "name": "family",
-                "cty": "octet-stream"
+                "dty": "octet-stream"
             }
         ]
     }
@@ -256,7 +256,7 @@ Content-Type: application/json
 
 * **`name`**
     * データおよびディレクトリの名前。
-* **`cty`**
+* **`dty`**
     * データタイプ。
 * **`bytes`**
     * データサイズ。
@@ -285,7 +285,7 @@ Content-Type: application/json
 
 {
     "name": "career",
-    "cty": "octet-stream",
+    "dty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900"
@@ -403,7 +403,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 {
     "name": "career",
     "bytes": 102,
-    "cty": "octet-stream",
+    "dty": "octet-stream",
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900",
     "permission": {
