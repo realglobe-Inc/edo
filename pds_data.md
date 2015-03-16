@@ -302,23 +302,24 @@ Content-Type: application/json
 * **`permission`**
     * [TA 間連携プロトコル]で付けられたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
       特殊な値として `*` で全てのユーザーの権限を示す。
+      アクセス権限は以下の権限を示す文字を組み合わせた文字列である。
+      組み合わせる順番も以下の通りで、例えば、`rw` は正しく、`wr` は正しくない。
+      また、アクセス権限が未定義の場合は何の権限も無いとする。
+        1. `r`
+            * 読み取り権限。
+        2. `w`
+            * 書き込み権限。
 
 ```json
 {
     "permission": {
         <ユーザータグ>: {
-            <アクセス元 TA の ID>: {
-                <権限>: true,
-                ...
-            },
+            <アクセス元 TA の ID>: <アクセス権限>,
             ...
         },
         ...
         "*": {
-            <アクセス元 TA の ID>: {
-                <権限>: true,
-                ...
-            },
+            <アクセス元 TA の ID>: <アクセス権限>,
             ...
         }
     }
@@ -346,18 +347,11 @@ Content-Type: application/json
 {
     "permission": {
         "self": {
-            "https://writer.example.org": {
-                "read": true,
-                "write": true
-            },
-            "https://reader.example.org": {
-                "read": true
-            }
+            "https://writer.example.org": "rw",
+            "https://reader.example.org": "r"
         },
         "observer": {
-            "https://reader.example.org": {
-                "read": true
-            }
+            "https://reader.example.org": "r"
         }
     }
 }
@@ -392,10 +386,10 @@ HTTP/1.1 200 OK
 Content-Type: application/octet-stream
 X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     My0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3RyZWFtIiwibmFtZSI6ImNhcmVlciIs
-    InBlcm1pc3Npb24iOnsib2JzZXJ2ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOnsi
-    cmVhZCI6dHJ1ZX19LCJzZWxmIjp7Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3JnIjp7InJlYWQi
-    OnRydWV9LCJodHRwczovL3dyaXRlci5leGFtcGxlLm9yZyI6eyJyZWFkIjp0cnVlLCJ3cml0ZSI6
-    dHJ1ZX19fSwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkrMDkwMCJ9.
+    InBlcm1pc3Npb24iOnsib2JzZXJ2ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOiJy
+    In0sInNlbGYiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOiJyIiwiaHR0cHM6Ly93cml0
+    ZXIuZXhhbXBsZS5vcmciOiJydyJ9fSwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkr
+    MDkwMCJ9.
 
 2012/03 博士号取得
         無職
@@ -415,18 +409,11 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     "updated_at": "2014-01-15T10:23:09+0900",
     "permission": {
         "self": {
-            "https://writer.example.org": {
-                "read": true,
-                "write": true
-            },
-            "https://reader.example.org": {
-                "read": true
-            }
+            "https://writer.example.org": "rw",
+            "https://reader.example.org": "r"
         },
         "observer": {
-            "https://reader.example.org": {
-                "read": true
-            }
+            "https://reader.example.org": "r"
         }
     }
 }
