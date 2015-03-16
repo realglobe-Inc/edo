@@ -114,7 +114,7 @@ TA から別の TA に処理を要請する際のプロトコル。
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
       他の IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID のハッシュ値へのマップ。
-* **`uhash_alg`**
+* **`u_hash_alg`**
     * `related_users` におけるユーザー ID のハッシュ値計算アルゴリズムが IdP 側のデフォルトと異なる場合は必須。
       同じであれば任意。
       そうでなければ無し。
@@ -255,7 +255,7 @@ TA 認証用データは省いている。
         * **`related_users`**
             * 必須。
               リクエストの `related_users` の内容そのまま。
-        * **`uhash_alg`**
+        * **`u_hash_alg`**
             * 必須。
               `related_users` におけるユーザー ID のハッシュ値計算アルゴリズム。
 
@@ -313,7 +313,7 @@ Content-Type: application/json
     "related_users": {
         "observer": "mHmlXWLkpYbgcHIzJKbkvd8tENXcI66L0qo+4nb4YEE"
     },
-    "uhash_alg": "SHA256"
+    "u_hash_alg": "SHA256"
 }
 ```
 
