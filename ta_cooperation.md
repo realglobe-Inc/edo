@@ -114,11 +114,16 @@ TA から別の TA に処理を要請する際のプロトコル。
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
       他の IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID のハッシュ値へのマップ。
-* **`uhash_alg`**
+      ハッシュ値はハッシュ値計算アルゴリズムにより出力されたバイト列の前半分を Base64URL エンコードしたものである。
+* **`u_hash_alg`**
     * `related_users` におけるユーザー ID のハッシュ値計算アルゴリズムが IdP 側のデフォルトと異なる場合は必須。
       同じであれば任意。
       そうでなければ無し。
       `related_users` におけるユーザー ID のハッシュ値計算アルゴリズム。
+      以下のいずれか。
+        * `SHA256`
+        * `SHA384`
+        * `SHA512`
 * **`related_idps`**
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
@@ -126,7 +131,7 @@ TA から別の TA に処理を要請する際のプロトコル。
 
 
 リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
-その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
+その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
 ### 4.1.1. 処理の主体が属す IdP への要請元仲介リクエスト例
@@ -146,7 +151,7 @@ Content-Type: application/json
         "invitee": "86504857780817848362"
     },
     "related_users": {
-        "observer": "mHmlXWLkpYbgcHIzJKbkvd8tENXcI66L0qo+4nb4YEE"
+        "observer": "mHmlXWLkpYbgcHIzJKbkvQ"
     },
     "related_idps": [
         "https://idp2.example.org"
@@ -175,7 +180,7 @@ TA 認証用データは省いている。
       IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID へのマップ。
 
 リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
-その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
+その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
 ### 4.2.1. 処理の主体が属さない IdP への要請元仲介リクエスト例
@@ -191,10 +196,10 @@ Content-Type: application/json
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIi
         wianRpIjoiUXNQUVNUMnMxalNTbUtKZkxaam1udyIsInJlbGF0ZWRfdXNlcnMiOnsib2JzZX
-        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZkOHRFTlhjSTY2TDBxbys0bmI0WUVFIn0sIn
-        N1YiI6Imh0dHBzOi8vZnJvbS5leGFtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leG
-        FtcGxlLm9yZyIsInVoYXNoX2FsZyI6IlNIQTI1NiJ9.IdjEqxS-_qKa4oWeCE9vl3RI3Sn88
-        5qQqZaC9V2V0IJcgHPnMGx3KY9JjnC_y6Ud7fD7kbg5A7dzj-u-gB7wVA",
+        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZRIn0sInN1YiI6Imh0dHBzOi8vZnJvbS5leG
+        FtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leGFtcGxlLm9yZyIsInVoYXNoX2FsZy
+        I6IlNIQTI1NiJ9.L2HnJ96s2DpzSzM_lFHd5W2D9KAFa5CwLgl1Me3JiH5B7pMcUuOh1jYtG
+        boTxl2KxHL-L_rtlW4rWg3UETAOCQ",
     "users": {
         "observer": "40053950180034613776"
     },
@@ -202,7 +207,37 @@ Content-Type: application/json
 ```
 
 `referral` は処理の主体が属す IdP からの要請元仲介レスポンス例のもの。
+`referral` の改行とインデントは表示の都合による。
 TA 認証用データは省いている。
+
+
+### 4.3. 要請元仲介リクエストの検証
+
+IdP は以下のように要請元仲介リクエストを検証しなければならない。
+--x--> は失敗時のエラーレスポンスの `error` の値を示す。
+
+* 要請元 TA を認証する。
+    * --x--> `invalid_client`
+* リクエストが必要なパラメータを含むことを確認する。
+    * --x--> `invalid_request`
+* `grant_type` が `access_token` なら、`access_token` パラメータの指すアクセストークンが有効であることを確認する。
+    * --x--> `invalid_grant`
+* `grant_type` が `access_token` かつ `scope` パラメータを含むなら、`scope` の値が `access_token` パラメータの指すアクセストークンのスコープよりも広くはないことを確認する。
+    * --x--> `invalid_scope`
+* `grant_type` が `access_token` なら、`to_ta` が指す TA が存在することを確認する。
+    * --x--> `invalid_request`
+* `users` が含まれるなら、`users` に含まれるユーザー ID が存在することを確認する。
+    * --x--> `invalid_request`
+* `related_idps` が含まれるなら、`related_idps` に含まれる IdP が存在することを確認する。
+    * --x--> `invalid_request`
+* 異なるユーザーに同じユーザータグが付けられていないことを確認する。
+    * --x--> `invalid_request`
+* `grant_type` が `referral` なら、`referral` パラメータの値を署名済み JWT として検証する。
+    * --x--> `invalid_grant`
+* `grant_type` が `referral` なら、`referral` パラメータの値の JWT が必要なクレームを含むことを確認する。
+    * --x--> `invalid_grant`
+* `grant_type` が `referral` なら、`referral` パラメータの値の JWT が含む `related_users` クレームに、`users` に含まれるユーザータグが全て含まれており、そのハッシュ値が正しいことを確認する。
+    * --x--> `invalid_grant`
 
 
 ## 5. 要請元仲介レスポンス
@@ -229,7 +264,7 @@ TA 認証用データは省いている。
         * **`user_tags`**
             * リクエストに `users` が含まれていた場合は必須。
               そうでなければ無し。
-              リクエストの `user_tags` に含まれていた全てのユーザータグの配列。
+              リクエストの `users` に含まれていた全てのユーザータグの配列。
 * **`referral`**
     * リクエストの `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
@@ -255,7 +290,7 @@ TA 認証用データは省いている。
         * **`related_users`**
             * 必須。
               リクエストの `related_users` の内容そのまま。
-        * **`uhash_alg`**
+        * **`u_hash_alg`**
             * 必須。
               `related_users` におけるユーザー ID のハッシュ値計算アルゴリズム。
 
@@ -275,10 +310,10 @@ Content-Type: application/json
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIi
         wianRpIjoiUXNQUVNUMnMxalNTbUtKZkxaam1udyIsInJlbGF0ZWRfdXNlcnMiOnsib2JzZX
-        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZkOHRFTlhjSTY2TDBxbys0bmI0WUVFIn0sIn
-        N1YiI6Imh0dHBzOi8vZnJvbS5leGFtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leG
-        FtcGxlLm9yZyIsInVoYXNoX2FsZyI6IlNIQTI1NiJ9.IdjEqxS-_qKa4oWeCE9vl3RI3Sn88
-        5qQqZaC9V2V0IJcgHPnMGx3KY9JjnC_y6Ud7fD7kbg5A7dzj-u-gB7wVA"
+        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZRIn0sInN1YiI6Imh0dHBzOi8vZnJvbS5leG
+        FtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leGFtcGxlLm9yZyIsInVoYXNoX2FsZy
+        I6IlNIQTI1NiJ9.L2HnJ96s2DpzSzM_lFHd5W2D9KAFa5CwLgl1Me3JiH5B7pMcUuOh1jYtG
+        boTxl2KxHL-L_rtlW4rWg3UETAOCQ"
 }
 ```
 
@@ -311,9 +346,9 @@ Content-Type: application/json
     "jti": "QsPQST2s1jSSmKJfLZjmnw",
     "to_ta": "https://to.example.org",
     "related_users": {
-        "observer": "mHmlXWLkpYbgcHIzJKbkvd8tENXcI66L0qo+4nb4YEE"
+        "observer": "mHmlXWLkpYbgcHIzJKbkvQ"
     },
-    "uhash_alg": "SHA256"
+    "u_hash_alg": "SHA256"
 }
 ```
 
@@ -402,20 +437,31 @@ Content-Type: application/json
 
 要請元 TA から要請先 TA の処理エンドポイントに、IdP から受け取った全ての `code_token` を JSON 配列の形で付加してリクエストを送る。
 
-付加は URL クエリか HTTP ヘッダにて行う。
+付加は URL クエリ、HTTP ヘッダ、リクエストボディの JSON の最上位要素のいずれかで行う。
 
 
-### 6.1. URL クエリによる付加
+### 6.1. URL クエリにて付加
 
-**`cooperation_codes`** パラメータに入れる。
-
-
-### 6.2. ヘッダによる付加
-
-**`X-Edo-Cooperation-Codes`** ヘッダに入れる。
+`cooperation_codes` パラメータに入れる。
 
 
-### 6.3. 付加データの例
+### 6.2. HTTP ヘッダにて付加
+
+X-Edo-Cooperation-Codes ヘッダに入れる。
+
+
+### 6.3. リクエストボディにて付加
+
+リクエストの Content-Type が application/json の場合のみ、JSON の最上位要素 `cooperation_codes` としてリクエストボディに入れることができる。
+ただし、URL クエリか HTTP ヘッダにて以下の方法で宣言を行わなければならない。
+
+* URL クエリでの宣言
+    * `cooperation_codes_in_body` パラメータを `true` とする。
+* HTTP ヘッダでの宣言
+    * X-Edo-Cooperation-Codes-In-Body ヘッダを `true` とする。
+
+
+### 6.4. 付加データの例
 
 ```json
 [
@@ -436,7 +482,21 @@ Content-Type: application/json
 ```
 
 [JWT] の改行とインデントは表示の都合による。
-付加の際は適切にエスケープする。
+URL クエリや HTTP ヘッダでの付加の際は適切にエスケープする。
+
+
+### 6.5. 処理要請リクエストの検証
+
+要請先 TA は以下のように処理要請リクエストを検証しなければならない。
+
+* 付加データがあることを確認する。
+* 付加データの各 JWT の署名を検証する。
+* 付加データの各 JWT が必要なクレームを含むことを確認する。
+* 付加データの各 JWT の `aud` クレームが自分の ID を含むことを確認する。
+* `user_tag` クレームを含む JWT が付加データの中にただ 1 つだけ存在することを確認する。
+* 異なるユーザーに同じユーザータグが付けられていないことを確認する。
+
+検証に失敗したときのエラーレスポンスの形式は要請先 TA の裁量であるが、[OAuth 2.0 Section 5.2] 形式で `error` の値を `invalid_request` にすることを推奨する。
 
 
 ## 7. 要請先仲介リクエスト
@@ -459,7 +519,7 @@ Content-Type: application/json
       ユーザータグから [OpenID Connect Core 1.0 Section 5.5] の `claims` パラメータの `id_token` 要素と同じものへのマップ。
 
 リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
-その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
+その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 要求したクレームに対する事前同意が無ければ拒否される。
 
@@ -506,6 +566,27 @@ Content-Type: application/json
 TA 認証用データは省いている。
 
 
+### 7.3. 要請先仲介リクエストの検証
+
+IdP は以下のように要請先仲介リクエストを検証しなければならない。
+--x--> は失敗時のエラーレスポンスの `error` の値を示す。
+
+* 要請元 TA を認証する。
+    * --x--> `invalid_client`
+* リクエストが必要なパラメータを含むことを確認する。
+    * --x--> `invalid_request`
+* `code` の指す仲介コードが有効であることを確認する。
+    * --x--> `invalid_grant`
+* `code` の指す仲介コードが要請先 TA 用に発行されたものであることを確認する。
+    * --x--> `invalid_grant`
+* `claims` を含むなら、`code` の指す仲介コードがアクセストークンに紐付くことを確認する。
+    * --x--> `invalid_grant`
+* `user_claims` を含むなら、`user_claims` には `code` の指す仲介コードに紐付くユーザータグのみが含まれることを確認する。
+    * --x--> `invalid_grant`
+* 要求された必須クレームに対する事前同意があることを確認する。
+    * --x--> `access_denied`
+
+
 ## 8. 要請先仲介レスポンス
 
 リクエストに問題が無ければ、IdP から要請先 TA に、以下の最上位要素を含む JSON オブジェクトを返す。
@@ -542,7 +623,7 @@ TA 認証用データは省いている。
               [ID トークン]の `iat` と同じもの。
         * **`ids`**
             * 必須。
-              ユーザータグからユーザーの [ID トークン]に含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
+              仲介コードに紐付く全てのユーザーについて、ユーザータグからユーザーの [ID トークン]に含まれるべき `iss`, `aud`, `exp`, `iat` 以外のクレームセットへのマップ。
               処理の主体のものもそれ以外のものも含む。
 
 
@@ -640,7 +721,24 @@ Content-Type: application/json
 署名に使用した鍵は処理の主体が属さない IdP からの要請元仲介レスポンス例と同じ。
 
 
-## 9. エラーレスポンス
+### 8.2. 要請先仲介レスポンスの検証
+
+要請先 TA は `ids_token` の値を署名済み [JWT] として検証しなければならない。
+
+
+## 9. セッション
+
+関連するユーザーが処理の主体のみ、かつ、要請先 TA に発行されたアクセストークンが有効である間は、上記プロトコルを省いても良い。
+この場合は、まず要請先 TA から要請元 TA へのレスポンスの際に、Set-Cookie で以下のセッションを宣言する。
+
+|Cookie 名|値|
+|:--|:--|
+|X-Edo-Cooperation-Session|セッション ID|
+
+要請元 TA は、後の処理要請リクエストの際に、このセッションを Cookie で宣言する。
+
+
+## 10. エラーレスポンス
 
 エラーは [OAuth 2.0 Section 5.2] の形式で返す。
 
