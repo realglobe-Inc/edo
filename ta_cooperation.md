@@ -214,18 +214,30 @@ TA 認証用データは省いている。
 ### 4.3. 要請元仲介リクエストの検証
 
 IdP は以下のように要請元仲介リクエストを検証しなければならない。
+--x--> は失敗時のエラーレスポンスの `error` の値を示す。
 
 * 要請元 TA を認証する。
+    * --x--> `invalid_client`
 * リクエストが必要なパラメータを含むことを確認する。
+    * --x--> `invalid_request`
 * `grant_type` が `access_token` なら、`access_token` パラメータの指すアクセストークンが有効であることを確認する。
+    * --x--> `invalid_grant`
 * `grant_type` が `access_token` かつ `scope` パラメータを含むなら、`scope` の値が `access_token` パラメータの指すアクセストークンのスコープよりも広くはないことを確認する。
+    * --x--> `invalid_scope`
 * `grant_type` が `access_token` なら、`to_ta` が指す TA が存在することを確認する。
+    * --x--> `invalid_request`
 * `users` が含まれるなら、`users` に含まれるユーザー ID が存在することを確認する。
+    * --x--> `invalid_request`
 * `related_idps` が含まれるなら、`related_idps` に含まれる IdP が存在することを確認する。
+    * --x--> `invalid_request`
 * 異なるユーザーに同じユーザータグが付けられていないことを確認する。
+    * --x--> `invalid_request`
 * `grant_type` が `referral` なら、`referral` パラメータの値を署名済み JWT として検証する。
+    * --x--> `invalid_grant`
 * `grant_type` が `referral` なら、`referral` パラメータの値の JWT が必要なクレームを含むことを確認する。
+    * --x--> `invalid_grant`
 * `grant_type` が `referral` なら、`referral` パラメータの値の JWT が含む `related_users` クレームに、`users` に含まれるユーザータグが全て含まれており、そのハッシュ値が正しいことを確認する。
+    * --x--> `invalid_grant`
 
 
 ## 5. 要請元仲介レスポンス
@@ -484,6 +496,8 @@ URL クエリや HTTP ヘッダでの付加の際は適切にエスケープす�
 * `user_tag` クレームを含む JWT が付加データの中にただ 1 つだけ存在することを確認する。
 * 異なるユーザーに同じユーザータグが付けられていないことを確認する。
 
+検証に失敗したときのエラーレスポンスの形式は要請先 TA の裁量であるが、[OAuth 2.0 Section 5.2] 形式で `error` の値を `invalid_request` にすることを推奨する。
+
 
 ## 7. 要請先仲介リクエスト
 
@@ -555,14 +569,22 @@ TA 認証用データは省いている。
 ### 7.3. 要請先仲介リクエストの検証
 
 IdP は以下のように要請先仲介リクエストを検証しなければならない。
+--x--> は失敗時のエラーレスポンスの `error` の値を示す。
 
 * 要請元 TA を認証する。
+    * --x--> `invalid_client`
 * リクエストが必要なパラメータを含むことを確認する。
+    * --x--> `invalid_request`
 * `code` の指す仲介コードが有効であることを確認する。
+    * --x--> `invalid_grant`
 * `code` の指す仲介コードが要請先 TA 用に発行されたものであることを確認する。
+    * --x--> `invalid_grant`
 * `claims` を含むなら、`code` の指す仲介コードがアクセストークンに紐付くことを確認する。
+    * --x--> `invalid_grant`
 * `user_claims` を含むなら、`user_claims` には `code` の指す仲介コードに紐付くユーザータグのみが含まれることを確認する。
+    * --x--> `invalid_grant`
 * 要求された必須クレームに対する事前同意があることを確認する。
+    * --x--> `access_denied`
 
 
 ## 8. 要請先仲介レスポンス

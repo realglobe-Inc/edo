@@ -149,11 +149,16 @@ Content-Type: application/json
 ### 4.2. 変更要請リクエストの検証
 
 PDS は変更要請リクエストを以下のように検証しなければならない。
+--x--> は失敗時のエラーレスポンスの `error` の値を示す。
 
 * [TA 間連携プロトコル]の処理要請リクエストに則っていることを検証する。
+    * --x--> `invalid_request`
 * `redirect_uri` が要請元 TA の配下であることを確認する。
+    * --x--> `invalid_request`
 * `user_tag` および `sub_tags` に現れるユーザータグが [TA 間連携プロトコル]で定義されていることを確認する。
+    * --x--> `invalid_request`
 * 対象データが存在することを確認する。
+    * --x--> `not_exist`
 
 また、全ての変更対象が非明示的に適用または転送で合意できる場合、`error` を `already_done` にしてエラーレスポンスを返しても良い。
 その場合は、以下の最上位要素も返さなければならない。
@@ -212,8 +217,10 @@ Location: https://pds.example.org/access-control/user?
 ### 6.2. PDS へのリダイレクトパラメータの検証
 
 PDS は以下のようにリダイレクトパラメータを検証しなければならない。
+--x--> は失敗時のエラーレスポンスの `error` の値を示す。
 
 * `code` の指す変更コードが有効であることを確認する。
+    * --x--> `invalid_grant`
 
 
 ## 7. ユーザーと PDS 間での合意
@@ -300,6 +307,13 @@ Location: https://reader.example.org/return/chmod?
 
 変更要請リクエストに対するエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 合意中のエラーは [OAuth 2.0 Section 4.1.2.1] の形式で、主に要請元 TA にリダイレクトして返す。
+
+`error` の値として以下を追加する。
+
+* **`already_done`**
+    * 既に変更が適用または転送されている。
+* **`not_exist`**
+    * 対象のデータおよびディレクトリが存在しない。
 
 
 <!-- 参照 -->
