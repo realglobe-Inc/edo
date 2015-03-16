@@ -77,6 +77,12 @@ limitations under the License.
             * 必須。
               データまたはディレクトリのパス。
               末尾が / ならディレクトリを指定しているとみなす。
+              これはデータタイプを `directory` にすることと等しい。
+        * `dty`
+            * 任意。
+              データタイプ。
+              実際のデータタイプと異なった場合は拒否される。
+              データタイプについては[PDS データアクセス API] を参照のこと。
         * `sub_tags`
             * 任意。
               アクセス権限を変更されるユーザーのユーザータグの配列。
@@ -272,5 +278,6 @@ Location: https://reader.example.org/return/chmod?
 [OAuth 2.0 Section 4.1.2.1]: http://tools.ietf.org/html/rfc6749#section-4.1.2.1
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
 [OpenID Connect Core 1.0 Section 3.1.2.1]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+[PDS データアクセス API]: https://github.com/realglobe-Inc/edo/blob/master/pds_data.md
 [TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
 [ユーザー認証プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/user_authentication.md
