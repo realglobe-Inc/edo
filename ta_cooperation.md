@@ -131,7 +131,7 @@ TA から別の TA に処理を要請する際のプロトコル。
 
 
 リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
-その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
+その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
 ### 4.1.1. 処理の主体が属す IdP への要請元仲介リクエスト例
@@ -180,7 +180,7 @@ TA 認証用データは省いている。
       IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID へのマップ。
 
 リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
-その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
+その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
 ### 4.2.1. 処理の主体が属さない IdP への要請元仲介リクエスト例
@@ -464,7 +464,7 @@ Content-Type: application/json
       ユーザータグから [OpenID Connect Core 1.0 Section 5.5] の `claims` パラメータの `id_token` 要素と同じものへのマップ。
 
 リクエスト時の TA 認証は必須であり、[OpenID Connect Core 1.0 Section 9] で定義されているクライアント認証方式を利用する。
-その際、x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
+その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 要求したクレームに対する事前同意が無ければ拒否される。
 
