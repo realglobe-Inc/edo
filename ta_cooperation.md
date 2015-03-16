@@ -114,11 +114,16 @@ TA から別の TA に処理を要請する際のプロトコル。
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
       他の IdP に属す関連するユーザー全てについて、ユーザータグからユーザー ID のハッシュ値へのマップ。
+      ハッシュ値は実際にハッシュ値計算アルゴリズムにより出力されたバイト列の前半分を Base64URL エンコードしたものである。
 * **`u_hash_alg`**
     * `related_users` におけるユーザー ID のハッシュ値計算アルゴリズムが IdP 側のデフォルトと異なる場合は必須。
       同じであれば任意。
       そうでなければ無し。
       `related_users` におけるユーザー ID のハッシュ値計算アルゴリズム。
+      以下のいずれか。
+        * `SHA256`
+        * `SHA384`
+        * `SHA512`
 * **`related_idps`**
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
@@ -146,7 +151,7 @@ Content-Type: application/json
         "invitee": "86504857780817848362"
     },
     "related_users": {
-        "observer": "mHmlXWLkpYbgcHIzJKbkvd8tENXcI66L0qo+4nb4YEE"
+        "observer": "mHmlXWLkpYbgcHIzJKbkvQ"
     },
     "related_idps": [
         "https://idp2.example.org"
@@ -191,10 +196,10 @@ Content-Type: application/json
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIi
         wianRpIjoiUXNQUVNUMnMxalNTbUtKZkxaam1udyIsInJlbGF0ZWRfdXNlcnMiOnsib2JzZX
-        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZkOHRFTlhjSTY2TDBxbys0bmI0WUVFIn0sIn
-        N1YiI6Imh0dHBzOi8vZnJvbS5leGFtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leG
-        FtcGxlLm9yZyIsInVoYXNoX2FsZyI6IlNIQTI1NiJ9.IdjEqxS-_qKa4oWeCE9vl3RI3Sn88
-        5qQqZaC9V2V0IJcgHPnMGx3KY9JjnC_y6Ud7fD7kbg5A7dzj-u-gB7wVA",
+        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZRIn0sInN1YiI6Imh0dHBzOi8vZnJvbS5leG
+        FtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leGFtcGxlLm9yZyIsInVoYXNoX2FsZy
+        I6IlNIQTI1NiJ9.L2HnJ96s2DpzSzM_lFHd5W2D9KAFa5CwLgl1Me3JiH5B7pMcUuOh1jYtG
+        boTxl2KxHL-L_rtlW4rWg3UETAOCQ",
     "users": {
         "observer": "40053950180034613776"
     },
@@ -275,10 +280,10 @@ Content-Type: application/json
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIi
         wianRpIjoiUXNQUVNUMnMxalNTbUtKZkxaam1udyIsInJlbGF0ZWRfdXNlcnMiOnsib2JzZX
-        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZkOHRFTlhjSTY2TDBxbys0bmI0WUVFIn0sIn
-        N1YiI6Imh0dHBzOi8vZnJvbS5leGFtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leG
-        FtcGxlLm9yZyIsInVoYXNoX2FsZyI6IlNIQTI1NiJ9.IdjEqxS-_qKa4oWeCE9vl3RI3Sn88
-        5qQqZaC9V2V0IJcgHPnMGx3KY9JjnC_y6Ud7fD7kbg5A7dzj-u-gB7wVA"
+        J2ZXIiOiJtSG1sWFdMa3BZYmdjSEl6Sktia3ZRIn0sInN1YiI6Imh0dHBzOi8vZnJvbS5leG
+        FtcGxlLm9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leGFtcGxlLm9yZyIsInVoYXNoX2FsZy
+        I6IlNIQTI1NiJ9.L2HnJ96s2DpzSzM_lFHd5W2D9KAFa5CwLgl1Me3JiH5B7pMcUuOh1jYtG
+        boTxl2KxHL-L_rtlW4rWg3UETAOCQ"
 }
 ```
 
@@ -311,7 +316,7 @@ Content-Type: application/json
     "jti": "QsPQST2s1jSSmKJfLZjmnw",
     "to_ta": "https://to.example.org",
     "related_users": {
-        "observer": "mHmlXWLkpYbgcHIzJKbkvd8tENXcI66L0qo+4nb4YEE"
+        "observer": "mHmlXWLkpYbgcHIzJKbkvQ"
     },
     "u_hash_alg": "SHA256"
 }
