@@ -265,8 +265,7 @@ Location: https://reader.example.org/return/chmod?
 ## 9. エラーレスポンス
 
 変更要請リクエストに対するエラーは [OAuth 2.0 Section 5.2] の形式で返す。
-合意中のエラーは [OAuth 2.0 Section 4.1.2.1] の形式で要請元 TA にリダイレクトして返す。
-ただし、変更コードが正しいリダイレクト URI に紐付いていなかった場合は、[OAuth 2.0 Section 5.2] の形式でユーザーに返す。
+合意中のエラーは [OAuth 2.0 Section 4.1.2.1] の形式で、主に要請元 TA にリダイレクトして返す。
 
 
 <!-- 参照 -->
