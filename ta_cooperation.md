@@ -407,20 +407,31 @@ Content-Type: application/json
 
 要請元 TA から要請先 TA の処理エンドポイントに、IdP から受け取った全ての `code_token` を JSON 配列の形で付加してリクエストを送る。
 
-付加は URL クエリか HTTP ヘッダにて行う。
+付加は URL クエリ、HTTP ヘッダ、リクエストボディの JSON の最上位要素のいずれかで行う。
 
 
-### 6.1. URL クエリによる付加
+### 6.1. URL クエリにて付加
 
-**`cooperation_codes`** パラメータに入れる。
-
-
-### 6.2. ヘッダによる付加
-
-**`X-Edo-Cooperation-Codes`** ヘッダに入れる。
+`cooperation_codes` パラメータに入れる。
 
 
-### 6.3. 付加データの例
+### 6.2. HTTP ヘッダにて付加
+
+X-Edo-Cooperation-Codes ヘッダに入れる。
+
+
+### 6.3. リクエストボディにて付加
+
+リクエストの Content-Type が application/json の場合のみ、JSON の最上位要素 `cooperation_codes` としてリクエストボディに入れることができる。
+ただし、URL クエリか HTTP ヘッダにて以下の方法で宣言を行わなければならない。
+
+* URL クエリでの宣言
+    * `cooperation_codes_in_body` パラメータを `true` とする。
+* HTTP ヘッダでの宣言
+    * X-Edo-Cooperation-Codes-In-Body ヘッダを `true` とする。
+
+
+### 6.4. 付加データの例
 
 ```json
 [
@@ -441,7 +452,7 @@ Content-Type: application/json
 ```
 
 [JWT] の改行とインデントは表示の都合による。
-付加の際は適切にエスケープする。
+URL クエリや HTTP ヘッダでの付加の際は適切にエスケープする。
 
 
 ## 7. 要請先仲介リクエスト
