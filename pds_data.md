@@ -72,10 +72,10 @@ limitations under the License.
 
 ### 2.2. URL による指定
 
-ユーザータグと TA の ID を [URL エンコード]した上で、パスと共に以下のように指定する。
+ユーザータグと TA の ID を [URL エンコード]した上で、パスと共に以下の形でデータアクセスエンドポイントに続けて指定する。
 
 ```
-/<ユーザータグ>/<TA の ID><パス>
+<ユーザータグ>/<TA の ID><パス>
 ```
 
 データタイプは以下のパラメータで指定する。
@@ -87,7 +87,7 @@ limitations under the License.
 ### 2.2.1. URL による指定の例
 
 ```
-/user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
+user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
@@ -180,7 +180,7 @@ limitations under the License.
 リクエストは、
 
 ```HTTP
-GET /user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
+GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -218,7 +218,7 @@ Content-Type: application/octet-stream
 リクエストは、
 
 ```HTTP
-GET /user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
+GET /data/user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -271,7 +271,7 @@ Content-Type: application/json
 リクエストは、
 
 ```HTTP
-GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
+GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -332,7 +332,7 @@ Content-Type: application/json
 リクエストは、
 
 ```HTTP
-GET /user/https%3A%2F%2Fwriter.example.org/profile/career?rty=permission HTTP/1.1
+GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career?rty=permission HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -371,7 +371,7 @@ Content-Type: application/json
 リクエストは、
 
 ```HTTP
-GET /user/https%3A%2F%2Fwriter.example.org/profile/career?
+GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career?
     rty=content+metadata+permission HTTP/1.1
 Host: pds.example.org
 ```
@@ -446,7 +446,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 リクエストは、
 
 ```HTTP
-PUT /user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
+PUT /data/user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 
 食っちゃ寝。
@@ -471,7 +471,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-PUT /user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?parents=true HTTP/1.1
+PUT /data/user/https%3A%2F%2Fwriter.example.org/secret/himitsu/maruhi/gokuhi/?parents=true HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -500,7 +500,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
+DELETE /data/user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -523,7 +523,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /user/https%3A%2F%2Fwriter.example.org/secret/?recursive=true HTTP/1.1
+DELETE /data/user/https%3A%2F%2Fwriter.example.org/secret/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
