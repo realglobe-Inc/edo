@@ -541,6 +541,7 @@ Content-Type: application/json
 * 対象のデータが存在しない場合、`not_exist`。
 * アクセス権限が無い場合、`access_denied`。
 * 親ディレクトリ作成フラグ無しで親ディレクトリの無いデータを作成しようとした場合、`directory_not_exist`。
+* 作成しようとした親ディレクトリが別のデータ型として存在する場合、`invalid_dty`。
 * 再帰フラグ無しで空でないディレクトリを削除しようとした場合、`not_empty`。
 
 
