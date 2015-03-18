@@ -43,38 +43,12 @@ PDS に格納されるデータは型を持つ。
     * ディレクトリ
 
 
-## 3. アクセス権限
-
-PDS に格納されるデータは、アクセスの主体と要請元 TA ごとにアクセス権限を設定できる。
-
-
-### 3.1. 権限の種類
-
-以下の権限を含む。
-
-* 読み取り権限。
-* 書き込み権限。
-
-
-### 3.2. アクセス権限の表記
-
-アクセス権限は、権限を示す以下の文字を組み合わせた文字列で表す。
-
-1. `r`
-    * 読み取り権限。
-2. `w`
-    * 書き込み権限。
-
-組み合わせる順番は上記の通りでなければならない。
-例えば、`rw` は正しいアクセス権限であるが、`wr` はそうではない。
-
-
-## 4. データ指定
+## 3. データ指定
 
 URL または JSON により項目を指定することで、アクセスするデータを指定する。
 
 
-### 4.1. 指定項目
+### 3.1. 指定項目
 
 以下の項目がある。
 
@@ -95,7 +69,7 @@ URL または JSON により項目を指定することで、アクセスする�
       実際のデータ型と異なる場合は拒否される。
 
 
-#### 4.1.1. 項目例
+#### 3.1.1. 項目例
 
 |項目|例|
 |:--|:--|
@@ -105,7 +79,7 @@ URL または JSON により項目を指定することで、アクセスする�
 |データ型|`octet-stream`|
 
 
-### 4.2. URL による指定
+### 3.2. URL による指定
 
 ユーザータグと TA の ID を [URL エンコード]した上で、パスと共に以下の形でデータアクセスエンドポイントに続けて指定する。
 
@@ -119,14 +93,14 @@ URL または JSON により項目を指定することで、アクセスする�
     * データ型。
 
 
-#### 4.2.1. URL による指定例
+#### 3.2.1. URL による指定例
 
 ```
 user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
-### 4.3. JSON による指定
+### 3.3. JSON による指定
 
 以下の要素を含むオブジェクトにより指定する。
 
@@ -140,7 +114,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
     * データ型。
 
 
-#### 4.3.1. JSON による指定例
+#### 3.3.1. JSON による指定例
 
 ```json
 {
@@ -152,7 +126,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
-## 5. 操作の種類
+## 4. 操作の種類
 
 |HTTP メソッド|操作|
 |:--|:--|
@@ -161,7 +135,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 |DELETE|削除|
 
 
-## 6. 汎用読み取り操作
+## 5. 汎用読み取り操作
 
 以下の指定項目が追加される。
 
@@ -175,6 +149,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
             * サイズ、更新日時等のメタデータ。
         * `permission`
             * アクセス権限。
+              アクセス権限については [PDS 権限変更プロトコル] を参照のこと。
 
 指定方法は以下の通り。
 
@@ -190,12 +165,12 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 |X-Pds-Datainfo|メタデータやアクセス権限を含む [JWT]|
 
 
-### 6.1. データ本体の読み取り
+### 5.1. データ本体の読み取り
 
 データをそのままレスポンスボディに入れて返す。
 
 
-#### 6.1.1. データ本体の読み取り例
+#### 5.1.1. データ本体の読み取り例
 
 リクエストは、
 
@@ -219,7 +194,7 @@ Content-Type: application/octet-stream
 ```
 
 
-### 6.2. メタデータの読み取り
+### 5.2. メタデータの読み取り
 
 サイズや更新日時等を JSON オブジェクトでレスポンスボディに入れて返す。
 メタデータは以下の最上位要素を含む。
@@ -236,7 +211,7 @@ Content-Type: application/octet-stream
     * 更新日時。[RFC3339] 形式。
 
 
-#### 6.2.1. メタデータの読み取り例
+#### 5.2.1. メタデータの読み取り例
 
 リクエストは、
 
@@ -263,7 +238,7 @@ Content-Type: application/json
 ```
 
 
-### 6.3. アクセス権限の読み取り
+### 5.3. アクセス権限の読み取り
 
 アクセス権限の内、[TA 間連携プロトコル]で通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
 
@@ -290,7 +265,7 @@ Content-Type: application/json
 ```
 
 
-#### 6.3.1. アクセス権限の読み取り例
+#### 5.3.1. アクセス権限の読み取り例
 
 リクエストは、
 
@@ -321,7 +296,7 @@ Content-Type: application/json
 ```
 
 
-### 6.4. 複合読み取り
+### 5.4. 複合読み取り
 
 `rty` で複数情報を指定された場合、複合的な情報を返す。
 
@@ -329,7 +304,7 @@ Content-Type: application/json
 また、`content` とその他の情報を同時に指定された場合、その他の情報は [JWT] にして X-Pds-Datainfo ヘッダに入れる。
 
 
-#### 6.4.1. 複合読み取り例
+#### 5.4.1. 複合読み取り例
 
 リクエストは、
 
@@ -383,7 +358,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ```
 
 
-## 7. 汎用書き込み・作成操作
+## 6. 汎用書き込み・作成操作
 
 主にリクエストボディをデータとして書き込む。
 データ型を指定しない場合、Content-Type ヘッダからデータ型を推定する。
@@ -401,7 +376,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 |親ディレクトリ作成フラグ|`parents` に `true`/`false` で|`parents` に真偽値で|
 
 
-### 7.1. データの書き込み例
+### 6.1. データの書き込み例
 
 リクエストは、
 
@@ -421,12 +396,12 @@ HTTP/1.1 204 No Content
 ```
 
 
-## 8. 汎用削除操作
+## 7. 汎用削除操作
 
 指定したデータを削除する。
 
 
-### 8.1. データの削除例
+### 7.1. データの削除例
 
 リクエストは、
 
@@ -444,17 +419,17 @@ HTTP/1.1 204 No Content
 ```
 
 
-## 9. octet-stream データ型
+## 8. octet-stream データ型
 
 `octet-stream` データ型には汎用操作と異なる点は無い。
 
 
-## 10. directory データ型
+## 9. directory データ型
 
 `directory` データ型における汎用操作と異なる点を挙げる。
 
 
-### 10.1. 読み取り操作
+### 9.1. 読み取り操作
 
 以下の指定項目が追加される。
 
@@ -478,7 +453,7 @@ HTTP/1.1 204 No Content
 |再帰フラグ|`recursive` に `true`/`false` で|`recursive` に真偽値で|
 
 
-#### 10.1.1. ディレクトリの読み取り
+#### 9.1.1. ディレクトリの読み取り
 
 ディレクトリの中のデータの情報を JSON 配列でレスポンスボディに入れて返す。
 データの情報は以下の最上位要素を含む。
@@ -494,7 +469,7 @@ HTTP/1.1 204 No Content
 ディレクトリ内読み込みタイプに `metadata` や `permission` を指定した場合に追加される情報は汎用読み取り操作のものと同じ。
 
 
-##### 10.1.1.1 ディレクトリの読み取り例
+##### 9.1.1.1 ディレクトリの読み取り例
 
 リクエストは、
 
@@ -530,14 +505,14 @@ Content-Type: application/json
 ```
 
 
-### 10.2. 削除操作
+### 9.2. 削除操作
 
 指定項目として読み取り操作と同じ再帰フラグが追加される。
 
 空でないディレクトリを削除する場合、再帰フラグは必須とする。
 
 
-## 11. エラーレスポンス
+## 10. エラーレスポンス
 
 エラーは [OAuth 2.0 Section 5.2] の形式で返す。
 
@@ -565,6 +540,7 @@ Content-Type: application/json
 <!-- 参照 -->
 [JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
+[PDS 権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_access_control.md
 [RFC3339]: http://tools.ietf.org/html/rfc3339
 [TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
 [URL エンコード]: http://tools.ietf.org/html/rfc1866#section-8.2.1
