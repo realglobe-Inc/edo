@@ -369,12 +369,17 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 * 親ディレクトリ作成フラグ
     * 対象のデータを置くディレクトリが存在しない場合に、必要なディレクトリを作成するかどうか。
       無指定の場合、作成しない。
+* 作成フラグ
+    * データ作成であることを明示する。
+      既にデータが存在する場合、操作が失敗する。
+      無指定の場合、このフラグは立たない。
 
 指定方法は以下の通り。
 
 |項目|URL パラメータ|JSON|
 |:--|:--|:--|
 |親ディレクトリ作成フラグ|`parents` に `true`/`false` で|`parents` に真偽値で|
+|作成フラグ|`create` に `true`/`false` で|`create` に真偽値で|
 
 
 ### 6.1. データの書き込み例
