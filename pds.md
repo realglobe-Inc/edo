@@ -40,6 +40,11 @@ PDS は、権限変更権限保持者が[権限変更プロトコル]にて受�
 PDS は、権限変更権限保持者が権限を確認・変更するための UI を持つべきである。
 
 
+## 5. インポート / エクスポート
+
+PDS は、異なる実装および運用の間での移行を可能にするために、インポートとエクスポートの機能を持たなければならない。
+
+
 <!-- 参照 -->
 [権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_access_control.md
 [データアクセス API]: https://github.com/realglobe-Inc/edo/blob/master/pds_data.md
