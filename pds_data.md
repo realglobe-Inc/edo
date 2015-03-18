@@ -364,6 +364,8 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 データ型を指定しない場合、Content-Type ヘッダからデータ型を推定する。
 推定不能な場合は `octet-stream` とみなす。
 
+作成されたデータはディレクトリの権限を引き継ぐ。
+
 次の指定項目が追加される。
 
 * 親ディレクトリ作成フラグ
