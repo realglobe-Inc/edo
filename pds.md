@@ -46,5 +46,5 @@ PDS は、異なる実装および運用の間での移行を可能にするた�
 
 
 <!-- 参照 -->
-[権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_access_control.md
+[権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_change_permission.md
 [データアクセス API]: https://github.com/realglobe-Inc/edo/blob/master/pds_data.md

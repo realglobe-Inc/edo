@@ -580,7 +580,7 @@ Content-Type: application/json
 <!-- 参照 -->
 [JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
-[PDS 権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_access_control.md
+[PDS 権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_change_permission.md
 [RFC3339]: http://tools.ietf.org/html/rfc3339
 [TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
 [URL エンコード]: http://tools.ietf.org/html/rfc1866#section-8.2.1
