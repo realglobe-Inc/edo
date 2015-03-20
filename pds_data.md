@@ -27,34 +27,39 @@ limitations under the License.
 加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
-## 2. データ型
+## 2. アクセス制御
+
+データアクセスは [PDS 権限変更プロトコル]等で設定されたアクセス権限に基づき[アクセス制御]される。
+
+
+## 3. データ型
 
 PDS に格納されるデータは型を持つ。
 型によって対応する指定項目が異なる。
 
 
-### 2.1. 型の種類
+### 3.1. 型の種類
 
 以下の型を含む。
 
 * **`octet-stream`**
     * バイト列。
 * **`directory`**
-    * ディレクトリ
+    * ディレクトリ。
 
 
-### 2.2. 型の推定
+### 3.2. 型の推定
 
 書き込み・作成操作においてデータ型が指定されない場合、Content-Type ヘッダからデータ型を推定する。
 推定不能な場合は `octet-stream` とみなす。
 
 
-## 3. データ指定
+## 4. データ指定
 
 URL または JSON により項目を指定することで、アクセスするデータを指定する。
 
 
-### 3.1. 指定項目
+### 4.1. 指定項目
 
 以下の項目がある。
 
@@ -75,7 +80,7 @@ URL または JSON により項目を指定することで、アクセスする�
       実際のデータ型と異なる場合は拒否される。
 
 
-#### 3.1.1. 項目例
+#### 4.1.1. 項目例
 
 |項目|例|
 |:--|:--|
@@ -85,7 +90,7 @@ URL または JSON により項目を指定することで、アクセスする�
 |データ型|`octet-stream`|
 
 
-### 3.2. URL による指定
+### 4.2. URL による指定
 
 ユーザータグと TA の ID を [URL エンコード]した上で、パスと共に以下の形でデータアクセスエンドポイントに続けて指定する。
 
@@ -99,14 +104,14 @@ URL または JSON により項目を指定することで、アクセスする�
     * データ型。
 
 
-#### 3.2.1. URL による指定例
+#### 4.2.1. URL による指定例
 
 ```
 user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
-### 3.3. JSON による指定
+### 4.3. JSON による指定
 
 以下の要素を含むオブジェクトにより指定する。
 
@@ -120,7 +125,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
     * データ型。
 
 
-#### 3.3.1. JSON による指定例
+#### 4.3.1. JSON による指定例
 
 ```json
 {
@@ -132,7 +137,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
-## 4. 操作の種類
+## 5. 操作の種類
 
 |HTTP メソッド|操作|
 |:--|:--|
@@ -158,12 +163,12 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 #### x.3.1. データの削除例
 -->
 
-## 5. octet-stream データ型
+## 6. octet-stream データ型
 
-任意のバイト列である `octet-stream` データ型に対する操作について説明する。
+任意のバイト列である `octet-stream` データ型に対する操作について。
 
 
-### 5.1 読み取り操作
+### 6.1 読み取り操作
 
 以下の指定項目が追加される。
 
@@ -177,7 +182,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
             * サイズ、更新日時等のメタデータ。
         * `permission`
             * アクセス権限。
-              アクセス権限については [PDS 権限変更プロトコル] を参照のこと。
+              アクセス権限については[アクセス制御]を参照のこと。
 
 指定方法は以下の通り。
 
@@ -193,12 +198,12 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 |X-Pds-Datainfo|メタデータやアクセス権限を含む [JWT]|
 
 
-#### 5.1.1. データ本体の読み取り
+#### 6.1.1. データ本体の読み取り
 
 データをそのままレスポンスボディに入れて返す。
 
 
-##### 5.1.1.1. データ本体の読み取り例
+##### 6.1.1.1. データ本体の読み取り例
 
 リクエストは、
 
@@ -222,7 +227,7 @@ Content-Type: application/octet-stream
 ```
 
 
-#### 5.1.2. メタデータの読み取り
+#### 6.1.2. メタデータの読み取り
 
 サイズや更新日時等を JSON オブジェクトでレスポンスボディに入れて返す。
 メタデータは以下の最上位要素を含む。
@@ -235,11 +240,17 @@ Content-Type: application/octet-stream
     * データサイズ。
 * **`created_at`**
     * 作成日時。[RFC3339] 形式。
+* **`create_user`**
+    * データを作成したユーザーが [TA 間連携プロトコル]で通知されている場合のみ。
+      データを作成したユーザーのユーザータグ。
 * **`updated_at`**
     * 更新日時。[RFC3339] 形式。
+* **`update_user`**
+    * データを更新したユーザーが [TA 間連携プロトコル]で通知されている場合のみ。
+      データを更新したユーザーのユーザータグ。
 
 
-##### 5.1.2.1. メタデータの読み取り例
+##### 6.1.2.1. メタデータの読み取り例
 
 リクエストは、
 
@@ -261,12 +272,14 @@ Content-Type: application/json
     "dty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
-    "updated_at": "2014-01-15T10:23:09+0900"
+    "create_user": "self",
+    "updated_at": "2014-01-15T10:23:09+0900",
+    "update_user": "self"
 }
 ```
 
 
-#### 5.1.3. アクセス権限の読み取り
+#### 6.1.3. アクセス権限の読み取り
 
 アクセス権限の内、[TA 間連携プロトコル]で通知されたユーザーに関わるものだけを JSON オブジェクトでレスポンスボディに入れて返す。
 
@@ -274,7 +287,7 @@ Content-Type: application/json
 
 * **`permission`**
     * [TA 間連携プロトコル]で付けられたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
-      特殊な値として `*` で全てのユーザーの権限を示す。
+      特殊な値として `*` で全てのユーザーや全ての TA を示す。
 
 ```json
 {
@@ -282,18 +295,20 @@ Content-Type: application/json
         <ユーザータグ>: {
             <アクセス元 TA の ID>: <アクセス権限>,
             ...
+            "*": <アクセス権限>
         },
         ...
         "*": {
             <アクセス元 TA の ID>: <アクセス権限>,
             ...
+            "*": <アクセス権限>
         }
     }
 }
 ```
 
 
-##### 5.1.3.1. アクセス権限の読み取り例
+##### 6.1.3.1. アクセス権限の読み取り例
 
 リクエストは、
 
@@ -314,17 +329,20 @@ Content-Type: application/json
     "permission": {
         "self": {
             "https://writer.example.org": "rw",
-            "https://reader.example.org": "r"
+            "*": "r"
         },
         "observer": {
             "https://reader.example.org": "r"
+        },
+        "*": {
+            "https://recruit.example.org": "r"
         }
     }
 }
 ```
 
 
-#### 5.1.4. 複合読み取り
+#### 6.1.4. 複合読み取り
 
 `rty` で複数情報を指定された場合、複合的な情報を返す。
 
@@ -332,7 +350,7 @@ Content-Type: application/json
 また、`content` とその他の情報を同時に指定された場合、その他の情報は [JWT] にして X-Pds-Datainfo ヘッダに入れる。
 
 
-##### 5.1.4.1. 複合読み取り例
+##### 6.1.4.1. 複合読み取り例
 
 リクエストは、
 
@@ -350,11 +368,12 @@ Host: pds.example.org
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
-    My0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3RyZWFtIiwibmFtZSI6ImNhcmVlciIs
-    InBlcm1pc3Npb24iOnsib2JzZXJ2ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOiJy
-    In0sInNlbGYiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOiJyIiwiaHR0cHM6Ly93cml0
-    ZXIuZXhhbXBsZS5vcmciOiJydyJ9fSwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkr
+X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVfdXNlciI6InNlbGYi
+    LCJjcmVhdGVkX2F0IjoiMjAxMy0wMy0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3Ry
+    ZWFtIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsiKiI6eyJodHRwczovL3JlY3J1aXQu
+    ZXhhbXBsZS5vcmciOiJyIn0sIm9ic2VydmVyIjp7Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3Jn
+    IjoiciJ9LCJzZWxmIjp7IioiOiJyIiwiaHR0cHM6Ly93cml0ZXIuZXhhbXBsZS5vcmciOiJydyJ9
+    fSwidXBkYXRlX3VzZXIiOiJzZWxmIiwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkr
     MDkwMCJ9.
 
 2012/03 博士号取得
@@ -369,27 +388,32 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ```json
 {
     "name": "career",
-    "bytes": 102,
     "dty": "octet-stream",
+    "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
+    "create_user": "self",
     "updated_at": "2014-01-15T10:23:09+0900",
+    "update_user": "self",
     "permission": {
         "self": {
             "https://writer.example.org": "rw",
-            "https://reader.example.org": "r"
+            "*": "r"
         },
         "observer": {
             "https://reader.example.org": "r"
+        },
+        "*": {
+            "https://recruit.example.org": "r"
         }
     }
 }
 ```
 
 
-### 5.2. 書き込み・作成操作
+### 6.2. 書き込み・作成操作
 
 リクエストボディをデータとして書き込む。
-作成されたデータはディレクトリの権限を引き継ぐ。
+新規作成されるデータはディレクトリの権限を引き継ぐ。
 
 次の指定項目が追加される。
 
@@ -397,7 +421,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     * 対象のデータを置くディレクトリが存在しない場合に、必要なディレクトリを作成するかどうか。
       無指定の場合、作成しない。
 * 作成フラグ
-    * データ作成であることを明示する。
+    * 作成であることを明示する。
       既にデータが存在する場合、操作が失敗する。
       無指定の場合、このフラグは立たない。
 
@@ -409,7 +433,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 |作成フラグ|`create` に `true`/`false` で|`create` に真偽値で|
 
 
-#### 5.2.1. データの書き込み例
+#### 6.2.1. データの書き込み例
 
 リクエストは、
 
@@ -429,12 +453,12 @@ HTTP/1.1 204 No Content
 ```
 
 
-### 5.3. 削除操作
+### 6.3. 削除操作
 
 指定したデータを削除する。
 
 
-#### 5.3.1. データの削除例
+#### 6.3.1. データの削除例
 
 リクエストは、
 
@@ -452,12 +476,12 @@ HTTP/1.1 204 No Content
 ```
 
 
-## 6. directory データ型
+## 7. directory データ型
 
-`directory` データ型に対する操作について説明する。
+`directory` データ型に対する操作について。
 
 
-### 6.1. 読み取り操作
+### 7.1. 読み取り操作
 
 `octet-stream` 型で追加した読み込みタイプに加えて、以下の指定項目が追加される。
 
@@ -471,7 +495,8 @@ HTTP/1.1 204 No Content
         * `permission`
             * アクセス権限。
 * 再帰フラグ
-    * 任意。
+    * 読み込みタイプが `content` を含む場合は任意。
+      そうでなければ無し。
       中のディレクトリに対して再帰的に操作を適用するかどうか。
       無指定の場合、適用しない。
 
@@ -485,7 +510,7 @@ HTTP/1.1 204 No Content
 メタデータやアクセス権限の読み取りは `octet-stream` 型と変わらない。
 
 
-#### 6.1.1. ディレクトリ本体の読み取り
+#### 7.1.1. ディレクトリ本体の読み取り
 
 ディレクトリの中のデータの情報を JSON 配列でレスポンスボディに入れて返す。
 データの情報は以下の最上位要素を含む。
@@ -501,7 +526,7 @@ HTTP/1.1 204 No Content
 ディレクトリ内読み込みタイプに `metadata` や `permission` を指定した場合に追加される情報は、メタデータやアクセス権限の読み取りで得られるものと同じ。
 
 
-##### 6.1.1.1 ディレクトリの読み取り例
+##### 7.1.1.1 ディレクトリの読み取り例
 
 リクエストは、
 
@@ -537,21 +562,21 @@ Content-Type: application/json
 ```
 
 
-### 6.2. 書き込み・作成操作
+### 7.2. 書き込み・作成操作
 
 リクエストボディは使わない。
-そのため、データ型の指定は必須である。
+データ型の指定は必須である。
 それ以外は `octet-stream` 型と変わらない。
 
 
-### 6.3. 削除操作
+### 7.3. 削除操作
 
 指定項目として読み取り操作と同じ再帰フラグが追加される。
 空でないディレクトリを削除する場合、再帰フラグは必須とする。
 それ以外は `octet-stream` 型と変わらない。
 
 
-## 7. エラーレスポンス
+## 8. エラーレスポンス
 
 エラーは [OAuth 2.0 Section 5.2] の形式で返す。
 
@@ -572,7 +597,7 @@ Content-Type: application/json
 * データ型が実際のデータ型と異なる場合、`invalid_dty`。
 * 対象のデータが存在しない場合、`not_exist`。
 * アクセス権限が無い場合、`access_denied`。
-* 親ディレクトリ作成フラグ無しで親ディレクトリの無いデータを作成しようとした場合、`directory_not_exist`。
+* 親ディレクトリ作成フラグ無しで存在しないディレクトリの中にデータを作成しようとした場合、`directory_not_exist`。
 * 作成しようとした親ディレクトリが別のデータ型として存在する場合、`invalid_dty`。
 * 再帰フラグ無しで空でないディレクトリを削除しようとした場合、`not_empty`。
 
@@ -580,7 +605,8 @@ Content-Type: application/json
 <!-- 参照 -->
 [JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
-[PDS 権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_access_control.md
+[PDS 権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_change_permission.md
 [RFC3339]: http://tools.ietf.org/html/rfc3339
 [TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
 [URL エンコード]: http://tools.ietf.org/html/rfc1866#section-8.2.1
+[アクセス制御]: https://github.com/realglobe-Inc/edo/blob/master/access_control.md

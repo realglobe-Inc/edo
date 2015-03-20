@@ -32,12 +32,12 @@ PDS は、[データアクセス API]を提供しなければならない。
 
 ## 3. 権限変更要求を処理する UI
 
-PDS は、権限変更権限保持者が[権限変更プロトコル]にて受信した権限変更要求を処理するための UI を持たなければならない。
+PDS は、アクセス権限の変更権限保持者が[権限変更プロトコル]にて受信した権限変更要求を処理するための UI を持たなければならない。
 
 
 ## 4. 権限変更 UI
 
-PDS は、権限変更権限保持者が権限を確認・変更するための UI を持つべきである。
+PDS は、アクセス権限の変更権限保持者がアクセス権限を確認・変更するための UI を持つべきである。
 
 
 ## 5. インポート / エクスポート
@@ -46,5 +46,5 @@ PDS は、異なる実装および運用の間での移行を可能にするた�
 
 
 <!-- 参照 -->
-[権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_access_control.md
+[権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_change_permission.md
 [データアクセス API]: https://github.com/realglobe-Inc/edo/blob/master/pds_data.md
