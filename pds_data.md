@@ -177,7 +177,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
             * サイズ、更新日時等のメタデータ。
         * `permission`
             * アクセス権限。
-              アクセス権限については [PDS 権限変更プロトコル] を参照のこと。
+              アクセス権限については[アクセス制御]を参照のこと。
 
 指定方法は以下の通り。
 
