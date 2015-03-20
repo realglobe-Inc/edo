@@ -87,13 +87,7 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
         * `path`
             * 必須。
               データのパス。
-              末尾が / ならディレクトリを指定しているとみなす。
-              これはデータ型を `directory` にすることと等しい。
-        * `dty`
-            * 任意。
-              データ型。
-              実際のデータ型と異なった場合は拒否される。
-              データ型については [PDS データアクセス API] を参照のこと。
+              ディレクトリを指す場合はサブツリー全体を変更することを意味する。
         * `access_users`
             * 任意。
               アクセス権限を変更されるユーザーのユーザータグの配列。
@@ -109,11 +103,6 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
               変更する権限。
               `[+-=]`&lt;アクセス権限&gt;。
               `+r` 等。
-        * `recursive`
-            * 対象がディレクトリなら任意。
-              そうでなければ無し。
-              中のデータに対して再帰的に適用するかどうか。
-              無指定の場合、適用しない。
         * `essential`
             * 任意。
               変更が拒否された場合に他の変更も破棄するかどうか。
@@ -144,15 +133,13 @@ Content-Type: application/json
             "ta": "https://writer.example.org",
             "path": "/profile",
             "mod": "+r",
-            "recursive": true,
             "essential": true
         },
         "diary": {
             "user_tag": "user",
             "ta": "https://writer.example.org",
             "path": "/diary",
-            "mod": "+r",
-            "recursive": true
+            "mod": "+r"
         }
     },
     "redirect_uri": "https://reader.example.org/return/chmod",
@@ -367,7 +354,6 @@ Location: https://reader.example.org/return/chmod?
 [OAuth 2.0 Section 4.1.2.1]: http://tools.ietf.org/html/rfc6749#section-4.1.2.1
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
 [OpenID Connect Core 1.0 Section 3.1.2.1]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
-[PDS データアクセス API]: https://github.com/realglobe-Inc/edo/blob/master/pds_data.md
 [TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
 [アクセス制御]: https://github.com/realglobe-Inc/edo/blob/master/access_control.md
 [ユーザー認証プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/user_authentication.md
