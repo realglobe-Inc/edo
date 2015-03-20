@@ -240,8 +240,14 @@ Content-Type: application/octet-stream
     * データサイズ。
 * **`created_at`**
     * 作成日時。[RFC3339] 形式。
+* **`create_user`**
+    * データを作成したユーザーが [TA 間連携プロトコル]で通知されている場合のみ。
+      データを作成したユーザーのユーザータグ。
 * **`updated_at`**
     * 更新日時。[RFC3339] 形式。
+* **`update_user`**
+    * データを更新したユーザーが [TA 間連携プロトコル]で通知されている場合のみ。
+      データを更新したユーザーのユーザータグ。
 
 
 ##### 6.1.2.1. メタデータの読み取り例
@@ -266,7 +272,9 @@ Content-Type: application/json
     "dty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
-    "updated_at": "2014-01-15T10:23:09+0900"
+    "create_user": "self",
+    "updated_at": "2014-01-15T10:23:09+0900",
+    "update_user": "self"
 }
 ```
 
@@ -279,7 +287,7 @@ Content-Type: application/json
 
 * **`permission`**
     * [TA 間連携プロトコル]で付けられたユーザータグからアクセス元 TA ごとのアクセス権限へのマップ。
-      特殊な値として `*` で全てのユーザーの権限を示す。
+      特殊な値として `*` で全てのユーザーや全ての TA を示す。
 
 ```json
 {
@@ -287,11 +295,13 @@ Content-Type: application/json
         <ユーザータグ>: {
             <アクセス元 TA の ID>: <アクセス権限>,
             ...
+            "*": <アクセス権限>
         },
         ...
         "*": {
             <アクセス元 TA の ID>: <アクセス権限>,
             ...
+            "*": <アクセス権限>
         }
     }
 }
@@ -319,10 +329,13 @@ Content-Type: application/json
     "permission": {
         "self": {
             "https://writer.example.org": "rw",
-            "https://reader.example.org": "r"
+            "*": "r"
         },
         "observer": {
             "https://reader.example.org": "r"
+        },
+        "*": {
+            "https://recruit.example.org": "r"
         }
     }
 }
@@ -355,11 +368,12 @@ Host: pds.example.org
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
-    My0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3RyZWFtIiwibmFtZSI6ImNhcmVlciIs
-    InBlcm1pc3Npb24iOnsib2JzZXJ2ZXIiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOiJy
-    In0sInNlbGYiOnsiaHR0cHM6Ly9yZWFkZXIuZXhhbXBsZS5vcmciOiJyIiwiaHR0cHM6Ly93cml0
-    ZXIuZXhhbXBsZS5vcmciOiJydyJ9fSwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkr
+X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVfdXNlciI6InNlbGYi
+    LCJjcmVhdGVkX2F0IjoiMjAxMy0wMy0wOVQxODo0NDo0MCswOTAwIiwiY3R5Ijoib2N0ZXQtc3Ry
+    ZWFtIiwibmFtZSI6ImNhcmVlciIsInBlcm1pc3Npb24iOnsiKiI6eyJodHRwczovL3JlY3J1aXQu
+    ZXhhbXBsZS5vcmciOiJyIn0sIm9ic2VydmVyIjp7Imh0dHBzOi8vcmVhZGVyLmV4YW1wbGUub3Jn
+    IjoiciJ9LCJzZWxmIjp7IioiOiJyIiwiaHR0cHM6Ly93cml0ZXIuZXhhbXBsZS5vcmciOiJydyJ9
+    fSwidXBkYXRlX3VzZXIiOiJzZWxmIiwidXBkYXRlZF9hdCI6IjIwMTQtMDEtMTVUMTA6MjM6MDkr
     MDkwMCJ9.
 
 2012/03 博士号取得
@@ -377,14 +391,19 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     "dty": "octet-stream",
     "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
+    "create_user": "self",
     "updated_at": "2014-01-15T10:23:09+0900",
+    "update_user": "self",
     "permission": {
         "self": {
             "https://writer.example.org": "rw",
-            "https://reader.example.org": "r"
+            "*": "r"
         },
         "observer": {
             "https://reader.example.org": "r"
+        },
+        "*": {
+            "https://recruit.example.org": "r"
         }
     }
 }
