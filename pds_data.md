@@ -40,7 +40,7 @@ PDS に格納されるデータは型を持つ。
 * **`octet-stream`**
     * バイト列。
 * **`directory`**
-    * ディレクトリ
+    * ディレクトリ。
 
 
 ### 2.2. 型の推定
@@ -160,7 +160,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 
 ## 5. octet-stream データ型
 
-任意のバイト列である `octet-stream` データ型に対する操作について説明する。
+任意のバイト列である `octet-stream` データ型に対する操作について。
 
 
 ### 5.1 読み取り操作
@@ -369,8 +369,8 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ```json
 {
     "name": "career",
-    "bytes": 102,
     "dty": "octet-stream",
+    "bytes": 102,
     "created_at": "2013-03-09T18:44:40+0900",
     "updated_at": "2014-01-15T10:23:09+0900",
     "permission": {
@@ -389,7 +389,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
 ### 5.2. 書き込み・作成操作
 
 リクエストボディをデータとして書き込む。
-作成されたデータはディレクトリの権限を引き継ぐ。
+新規作成されるデータはディレクトリの権限を引き継ぐ。
 
 次の指定項目が追加される。
 
@@ -397,7 +397,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVkX2F0IjoiMjAxMy0w
     * 対象のデータを置くディレクトリが存在しない場合に、必要なディレクトリを作成するかどうか。
       無指定の場合、作成しない。
 * 作成フラグ
-    * データ作成であることを明示する。
+    * 作成であることを明示する。
       既にデータが存在する場合、操作が失敗する。
       無指定の場合、このフラグは立たない。
 
@@ -454,7 +454,7 @@ HTTP/1.1 204 No Content
 
 ## 6. directory データ型
 
-`directory` データ型に対する操作について説明する。
+`directory` データ型に対する操作について。
 
 
 ### 6.1. 読み取り操作
@@ -540,7 +540,7 @@ Content-Type: application/json
 ### 6.2. 書き込み・作成操作
 
 リクエストボディは使わない。
-そのため、データ型の指定は必須である。
+データ型の指定は必須である。
 それ以外は `octet-stream` 型と変わらない。
 
 
@@ -572,7 +572,7 @@ Content-Type: application/json
 * データ型が実際のデータ型と異なる場合、`invalid_dty`。
 * 対象のデータが存在しない場合、`not_exist`。
 * アクセス権限が無い場合、`access_denied`。
-* 親ディレクトリ作成フラグ無しで親ディレクトリの無いデータを作成しようとした場合、`directory_not_exist`。
+* 親ディレクトリ作成フラグ無しで存在しないディレクトリの中にデータを作成しようとした場合、`directory_not_exist`。
 * 作成しようとした親ディレクトリが別のデータ型として存在する場合、`invalid_dty`。
 * 再帰フラグ無しで空でないディレクトリを削除しようとした場合、`not_empty`。
 
