@@ -796,7 +796,7 @@ Content-Type: application/json
 
 |Cookie 名|値|
 |:--|:--|
-|X-Edo-Cooperation-Session|セッション ID|
+|X-Edo-Cooperation|セッション ID|
 
 要請元 TA は、後の処理要請リクエストの際に、このセッションを Cookie ヘッダで宣言する。
 ユーザータグは最初に用いたものがそのまま用いられる。
