@@ -130,7 +130,7 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
         * `SHA256`
         * `SHA384`
         * `SHA512`
-* **`related_idps`**
+* **`related_issuers`**
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
       関連するユーザーが属す他の全ての IdP の ID の配列。
@@ -159,7 +159,7 @@ Content-Type: application/json
     "related_users": {
         "observer": "mHmlXWLkpYbgcHIzJKbkvQ"
     },
-    "related_idps": [
+    "related_issuers": [
         "https://idp2.example.org"
     ]
 }
@@ -234,7 +234,7 @@ IdP は以下のように要請元仲介リクエストを検証しなければ�
     * --f--> `invalid_request`
 * `users` を含む場合、`users` に含まれるユーザー ID が存在することを確認する。
     * --f--> `invalid_request`
-* `related_idps` を含む場合、`related_idps` に含まれる IdP が存在することを確認する。
+* `related_issuers` を含む場合、`related_issuers` に含まれる IdP が存在することを確認する。
     * --f--> `invalid_request`
 * 異なるユーザーに同じユーザータグが付けられていないことを確認する。
     * --f--> `invalid_request`
@@ -290,7 +290,7 @@ IdP は以下のように要請元仲介リクエストを検証しなければ�
               要請元 TA の ID。
         * **`aud`**
             * 必須。
-              リクエストの `related_idps` の内容そのまま。
+              リクエストの `related_issuers` の内容そのまま。
         * **`exp`**
             * 必須。
               有効期限。
