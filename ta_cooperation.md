@@ -806,6 +806,14 @@ Content-Type: application/json
 
 IdP からのエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 
+要請先 TA において、本プロトコルでのエラーが発生した場合、要請元 TA へのレスポンスに以下のヘッダを含めなければならない。
+
+|HTTP ヘッダ|値|
+|X-Edo-Cooperation-Error|適切なメッセージ|
+
+その他の形式は要請先 TA の裁量である。
+`error` の値を `invalid_request` とした [OAuth 2.0 Section 5.2] 形式にすることを推奨する。
+
 
 <!-- 参照 -->
 [ID トークン]: http://openid.net/specs/openid-connect-core-1_0.html#IDToken
