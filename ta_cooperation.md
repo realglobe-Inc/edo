@@ -144,7 +144,7 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
 
 ```HTTP
 POST /cooperation/from HTTP/1.1
-Host: idp1.example.org
+Host: idp.example.org
 Content-Type: application/json
 
 {
@@ -201,11 +201,11 @@ Content-Type: application/json
     "grant_type": "referral",
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
-        ovL2lkcDEuZXhhbXBsZS5vcmciLCJqdGkiOiJ5Ry04eGZtT29UN0Q0RERNIiwicmVsYXRlZF
-        91c2VycyI6eyJvYnNlcnZlciI6Inc5Y2ZQWjRIVEJUd1pyZGZlaWp2bmcifSwic3ViIjoiaH
-        R0cHM6Ly9mcm9tLmV4YW1wbGUub3JnIiwidG9fdGEiOiJodHRwczovL3RvLmV4YW1wbGUub3
-        JnIn0.GKQzqJ3r_ClPBo5j_uQYwllqJ1IrFb8SJWzbO1oF0mFxsowtLWkWGowuGPDnifoCek
-        3rtssc0WlaVO8JriBLGA",
+        ovL2lkcC5leGFtcGxlLm9yZyIsImp0aSI6InlHLTh4Zm1Pb1Q3RDRERE0iLCJyZWxhdGVkX3
+        VzZXJzIjp7Im9ic2VydmVyIjoidzljZlBaNEhUQlR3WnJkZmVpanZuZyJ9LCJzdWIiOiJodH
+        RwczovL2Zyb20uZXhhbXBsZS5vcmciLCJ0b190YSI6Imh0dHBzOi8vdG8uZXhhbXBsZS5vcm
+        cifQ.1UZ5BpKVWCWzI3IKO_k_KUankXGZNWrVWA890lekzsOzyagZvYAkVxKKgI6k8OatRQn
+        sS89R3nl2knDYMIXfGQ",
     "users": {
         "observer": "8C673B6A4060F26C"
     },
@@ -325,18 +325,18 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tF
-        UFNPaXdfWmlOV2NyS2ZRIiwic3ViIjoicDktRnB4WHhYQnQ1UFFyTTktNlQtdDNsOWVTejFu
-        IiwidXNlcl90YWciOiJpbnZpdGVyIiwidXNlcl90YWdzIjpbImludml0ZWUiXX0.iddemdnW
-        _WVm_sNeJ21F9hHScmRu8Y2bCD3lUZqA5ZmPRZ9PN2yBBqzFODSgEMWIO9G566bsgjES3lYC
-        k_Xeeg",
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IkZzaWNXVXdW
+        TDBzTUVBdGNtN2pJQlEiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4i
+        LCJ1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.K2KLEkl7S
+        24Pex2GzgnFTPSicfvAFHy6SYbCK52_jjOalLiVmeP2SAIiVB-UuRLoLP8LswAerjuqqnuNz
+        vRX4g",
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
-        ovL2lkcDEuZXhhbXBsZS5vcmciLCJqdGkiOiJ5Ry04eGZtT29UN0Q0RERNIiwicmVsYXRlZF
-        91c2VycyI6eyJvYnNlcnZlciI6Inc5Y2ZQWjRIVEJUd1pyZGZlaWp2bmcifSwic3ViIjoiaH
-        R0cHM6Ly9mcm9tLmV4YW1wbGUub3JnIiwidG9fdGEiOiJodHRwczovL3RvLmV4YW1wbGUub3
-        JnIn0.GKQzqJ3r_ClPBo5j_uQYwllqJ1IrFb8SJWzbO1oF0mFxsowtLWkWGowuGPDnifoCek
-        3rtssc0WlaVO8JriBLGA"
+        ovL2lkcC5leGFtcGxlLm9yZyIsImp0aSI6InlHLTh4Zm1Pb1Q3RDRERE0iLCJyZWxhdGVkX3
+        VzZXJzIjp7Im9ic2VydmVyIjoidzljZlBaNEhUQlR3WnJkZmVpanZuZyJ9LCJzdWIiOiJodH
+        RwczovL2Zyb20uZXhhbXBsZS5vcmciLCJ0b190YSI6Imh0dHBzOi8vdG8uZXhhbXBsZS5vcm
+        cifQ.1UZ5BpKVWCWzI3IKO_k_KUankXGZNWrVWA890lekzsOzyagZvYAkVxKKgI6k8OatRQn
+        sS89R3nl2knDYMIXfGQ"
 }
 ```
 
@@ -346,14 +346,14 @@ Content-Type: application/json
 
 ```json
 {
-    "iss": "https://idp1.example.org",
+    "iss": "https://idp.example.org",
     "sub": "p9-FpxXxXBt5PQrM9-6T-t3l9eSz1n",
     "aud": "https://to.example.org",
     "user_tag": "inviter",
     "user_tags": [
         "invitee"
     ],
-    "ref_hash": "v7yvGkEPSOiw_ZiNWcrKfQ"
+    "ref_hash": "FsicWUwVL0sMEAtcm7jIBQ"
 }
 ```
 
@@ -361,7 +361,7 @@ Content-Type: application/json
 
 ```json
 {
-    "iss": "https://idp1.example.org",
+    "iss": "https://idp.example.org",
     "sub": "https://from.example.org",
     "aud": [
         "https://idp2.example.org"
@@ -397,14 +397,14 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tF
-        UFNPaXdfWmlOV2NyS2ZRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
-        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.eNgB4m-YZbkSseDO7wBUlsMs-DSQCt7nKqh
-        zMgv4pkJw9pnU0prPXbVJ6-76gAdAqwRZkTN7OkR-RmcrHSq1I4zdi_OT7ce1As7Mtk6BCfo
-        lq_RaKCQsJkEF3rZUIYj_6oTBW-WLtLuMi0bw7BEcKit04wC4blRClys_a4sQ23mvuvYftd2
-        YgvbInv7shXlmksdxyxjoJOMJ4hnr5iYU6p2mhc4T9hM5cBg21N5ZqtIcGl0-nNo_5jdUPMQ
-        Glir2vw8uq_tvVU8pEBhVBPQfdnMPs01j-jMXFf9Mt22ptKRLsWl8O5j5yIPnV8tgwwQpjhl
-        m0ObqMO2sK88UUxBGzg"
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJGc2ljV1V3
+        Vkwwc01FQXRjbTdqSUJRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
+        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.pgbKhXoBJiukElsiISdjkhR6mYsEJhcsdo9
+        HsLk2ZijWqB2IwBDNGiOm6HefODba95wvnGeIw5m69lyUs-wLSFMcmzoeZSu3ev6TZO-fhaq
+        8wIGU4i_iUCxpojRoJ8-OtL1o55Bbt0qZ-ICjM1Wgv8dtI36vkIDG8g9TiHnMTMk6_34a9xB
+        XbwMfYlMM64PEe4IEDMF3wPLLY9FM5wuu069VM95T21zqv8MFVpANZxBz7q7wVUSpCJumusV
+        o0L3Z_39vIiy4ZXaXqoDkiInRCSBSwZeeNINgvnHU2IYQO5xdYIrTq0tTJOdHxZdtuJ7Yb_a
+        gpdzK1hw03oQYUAiuEg"
 }
 ```
 
@@ -420,7 +420,7 @@ Content-Type: application/json
     "user_tags": [
         "observer"
     ],
-    "ref_hash": "v7yvGkEPSOiw_ZiNWcrKfQ"
+    "ref_hash": "FsicWUwVL0sMEAtcm7jIBQ"
 }
 ```
 
@@ -485,18 +485,18 @@ Content-Type: application/json
 ```json
 [
     "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tFUFNPaXdfWmlOV2NyS2
-    ZRIiwic3ViIjoicDktRnB4WHhYQnQ1UFFyTTktNlQtdDNsOWVTejFuIiwidXNlcl90YWciOiJpbn
-    ZpdGVyIiwidXNlcl90YWdzIjpbImludml0ZWUiXX0.iddemdnW_WVm_sNeJ21F9hHScmRu8Y2bCD
-    3lUZqA5ZmPRZ9PN2yBBqzFODSgEMWIO9G566bsgjES3lYCk_Xeeg",
+    R0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IkZzaWNXVXdWTDBzTUVBdGNtN2pJQl
+    EiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c2VyX3RhZyI6Imludm
+    l0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.K2KLEkl7S24Pex2GzgnFTPSicfvAFHy6SYb
+    CK52_jjOalLiVmeP2SAIiVB-UuRLoLP8LswAerjuqqnuNzvRX4g",
     "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tFUFNPaXdfWmlOV2NyS2
-    ZRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
-    9ic2VydmVyIl19.eNgB4m-YZbkSseDO7wBUlsMs-DSQCt7nKqhzMgv4pkJw9pnU0prPXbVJ6-76g
-    AdAqwRZkTN7OkR-RmcrHSq1I4zdi_OT7ce1As7Mtk6BCfolq_RaKCQsJkEF3rZUIYj_6oTBW-WLt
-    LuMi0bw7BEcKit04wC4blRClys_a4sQ23mvuvYftd2YgvbInv7shXlmksdxyxjoJOMJ4hnr5iYU6
-    p2mhc4T9hM5cBg21N5ZqtIcGl0-nNo_5jdUPMQGlir2vw8uq_tvVU8pEBhVBPQfdnMPs01j-jMXF
-    f9Mt22ptKRLsWl8O5j5yIPnV8tgwwQpjhlm0ObqMO2sK88UUxBGzg"
+    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJGc2ljV1V3Vkwwc01FQXRjbTdqSU
+    JRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
+    9ic2VydmVyIl19.pgbKhXoBJiukElsiISdjkhR6mYsEJhcsdo9HsLk2ZijWqB2IwBDNGiOm6HefO
+    Dba95wvnGeIw5m69lyUs-wLSFMcmzoeZSu3ev6TZO-fhaq8wIGU4i_iUCxpojRoJ8-OtL1o55Bbt
+    0qZ-ICjM1Wgv8dtI36vkIDG8g9TiHnMTMk6_34a9xBXbwMfYlMM64PEe4IEDMF3wPLLY9FM5wuu0
+    69VM95T21zqv8MFVpANZxBz7q7wVUSpCJumusVo0L3Z_39vIiy4ZXaXqoDkiInRCSBSwZeeNINgv
+    nHU2IYQO5xdYIrTq0tTJOdHxZdtuJ7Yb_agpdzK1hw03oQYUAiuEg"
 ]
 ```
 
@@ -585,7 +585,7 @@ IdP は要請先仲介エンドポイントを TLS で提供しなければな�
 
 ```HTTP
 POST /cooperation/to HTTP/1.1
-Host: idp1.example.org
+Host: idp.example.org
 Content-Type: application/json
 
 {
@@ -705,9 +705,9 @@ Content-Type: application/json
         nBkcyI6eyJ0eXBlIjoic2luZ2xlIiwidXJpIjoiaHR0cHM6Ly9wZHMuZXhhbXBsZS5vcmcvI
         n0sInN1YiI6IjBCQUI0REUxRkQxNTM5NTgifSwiaW52aXRlciI6eyJwZHMiOnsidHlwZSI6I
         nNpbmdsZSIsInVyaSI6Imh0dHBzOi8vcGRzLmV4YW1wbGUub3JnLyJ9LCJzdWIiOiI4ODY3N
-        jNBRjhEMjZFN0M5In19LCJpc3MiOiJodHRwczovL2lkcDEuZXhhbXBsZS5vcmciLCJzdWIiO
-        iJodHRwczovL2Zyb20uZXhhbXBsZS5vcmcifQ.R4D7AQewQJttoNkCGJYZg4242c0NwodaH8
-        Us3h7rTMjaY8BA8sABkf-Bh0p2q1lmFEOQvwRWmtDoFm1djBN2ug"
+        jNBRjhEMjZFN0M5In19LCJpc3MiOiJodHRwczovL2lkcC5leGFtcGxlLm9yZyIsInN1YiI6I
+        mh0dHBzOi8vZnJvbS5leGFtcGxlLm9yZyJ9.oQA3DrNq4kMr9rIZUXCpU19q9DY3WYTnq24M
+        DD6oO440OMJBC9MpaaoqskqJ0W9mL1EO3e5pI55f6UnLFYyWgQ"
 }
 ```
 
@@ -717,7 +717,7 @@ Content-Type: application/json
 
 ```json
 {
-    "iss": "https://idp1.example.org",
+    "iss": "https://idp.example.org",
     "sub": "https://from.example.org",
     "aud": "https://to.example.org",
     "exp": 1425453702,
