@@ -204,7 +204,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "code": "6YYIWD6mH9B6ER5eDw3AkAnnCi-aPNutiqI6IwHN"
+    "code": "SS2EVIbmR7X1IHiHzMInTINxGYi-OY"
 }
 ```
 
@@ -233,7 +233,7 @@ PDS は合意エンドポイントを TLS で提供しなければならない�
 ```HTTP
 HTTP/1.1 302 Found
 Location: https://pds.example.org/access-control/user?
-    code=6YYIWD6mH9B6ER5eDw3AkAnnCi-aPNutiqI6IwHN
+    code=SS2EVIbmR7X1IHiHzMInTINxGYi-OY
 ```
 
 ヘッダ値の改行とインデントは表示の都合による。
