@@ -87,17 +87,13 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
         * `path`
             * 必須。
               データのパス。
-              ディレクトリを指す場合はサブツリー全体を変更することを意味する。
-        * `access_users`
+              ディレクトリを指す場合はサブツリー全体の権限を変更することを意味する。
+        * `accessor`
             * 任意。
-              アクセス権限を変更されるアカウントのアカウントタグの配列。
-              無指定の場合、処理の主体のみが指定されているとみなす。
-              また、特殊な値として、`*` で全てのアカウントを指定できる。
-        * `access_tas`
-            * 任意。
-              アクセス権限を変更される TA の ID の配列。
-              無指定の場合、要請元 TA のみが指定されているとみなす。
-              また、特殊な値として、`*` で全ての TA を指定できる。
+              アクセス元。
+              アクセス主体アカウントのアカウントタグからアクセス元 TA の ID の配列へのマップ。
+              無指定の場合、処理の主体と要請元 TA のみが指定されているとみなす。
+              また、特殊な値として、`*` で全てのアカウント、全ての TA を指定できる。
         * `mod`
             * 必須。
               変更する権限。
@@ -105,7 +101,7 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
               `+r` 等。
         * `essential`
             * 任意。
-              変更が拒否された場合に他の変更も破棄するかどうか。
+              変更が拒否された場合に他の変更を破棄するかどうか。
               無指定の場合、偽（他の変更は適用する）。
         * `check_exist`
             * 任意。
@@ -122,6 +118,22 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
 * **`ui_locales`**
     * [OpenID Connect Core 1.0 Section 3.1.2.1] の `ui_locales` と同じもの。
 
+以下は `accessor` の例。
+
+```json
+{
+    "self": [
+        "*"
+    ],
+    "observer": [
+        "https://reader.example.org"
+    ],
+    "*": [
+        "https://recruit.example.org"
+    ]
+}
+```
+
 
 #### 4.2.1. 変更要請リクエスト例
 
@@ -133,14 +145,14 @@ Content-Type: application/json
 {
     "chmod": {
         "profile": {
-            "user_tag": "user",
+            "user_tag": "self",
             "ta": "https://writer.example.org",
             "path": "/profile",
             "mod": "+r",
             "essential": true
         },
         "diary": {
-            "user_tag": "user",
+            "user_tag": "self",
             "ta": "https://writer.example.org",
             "path": "/diary",
             "mod": "+r"
@@ -204,7 +216,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "code": "6YYIWD6mH9B6ER5eDw3AkAnnCi-aPNutiqI6IwHN"
+    "code": "SS2EVIbmR7X1IHiHzMInTINxGYi-OY"
 }
 ```
 
@@ -233,7 +245,7 @@ PDS は合意エンドポイントを TLS で提供しなければならない�
 ```HTTP
 HTTP/1.1 302 Found
 Location: https://pds.example.org/access-control/user?
-    code=6YYIWD6mH9B6ER5eDw3AkAnnCi-aPNutiqI6IwHN
+    code=SS2EVIbmR7X1IHiHzMInTINxGYi-OY
 ```
 
 ヘッダ値の改行とインデントは表示の都合による。
@@ -296,6 +308,8 @@ PDS はユーザーに対して、非明示的には合意できない変更対�
 適用で合意した場合、速やかに権限を変更しなければならない。
 変更対象の範囲が重複する場合、範囲が広いものから順に変更した状態にならなければならない。
 例えば、/profile サブツリーの変更を行った後に /profile/career の変更を行う。
+また、変更要請リクエストで指定されなかったアクセス元のアクセス権限に変更を加えてはならない。
+`*` は `*` であり、他のアクセス元のアクセス権限を変えてはならない。
 
 転送で合意した場合、実際に変更権限保持者の受信箱に要求を追加するかどうかは PDS の裁量とする。
 適切なスパム防止策を施すことを推奨する。
@@ -334,10 +348,8 @@ PDS はユーザーに対して、非明示的には合意できない変更対�
 
 ```HTTP
 HTTP/1.1 302 Found
-Location: https://reader.example.org/return/chmod?
-    applied=%5B%22profile%22%5D
-    &denied=%5B%22diary%22%5D
-    &state=SiuR29g1Iu
+Location: https://reader.example.org/return/chmod?applied=%5B%22profile%22%5D
+    &denied=%5B%22diary%22%5D&state=SiuR29g1Iu
 ```
 
 ヘッダ値の改行とインデントは表示の都合による。
