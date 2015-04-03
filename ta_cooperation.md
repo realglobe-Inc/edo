@@ -122,7 +122,7 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
       そうでなければ無し。
       他の IdP に属す関連するアカウント全てについて、アカウントタグからアカウント ID のハッシュ値へのマップ。
       ハッシュ値はハッシュ値計算アルゴリズムの出力バイト列の前半分を Base64URL エンコードしたものである。
-* **`u_hash_alg`**
+* **`hash_alg`**
     * `related_users` におけるアカウント ID のハッシュ値計算アルゴリズムが IdP 側のデフォルトと異なる場合は必須。
       同じであれば任意。
       `related_users` におけるアカウント ID のハッシュ値計算アルゴリズム。
@@ -200,12 +200,12 @@ Content-Type: application/json
     "response_type": "code_token",
     "grant_type": "referral",
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
-        JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIi
-        wianRpIjoieUctOHhmbU9vVDdENERETSIsInJlbGF0ZWRfdXNlcnMiOnsib2JzZXJ2ZXIiOi
-        J3OWNmUFo0SFRCVHdacmRmZWlqdm5nIn0sInN1YiI6Imh0dHBzOi8vZnJvbS5leGFtcGxlLm
-        9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leGFtcGxlLm9yZyIsInVfaGFzaF9hbGciOiJTSE
-        EyNTYifQ.jwrIhEKtkSTkeqTL57hc_Se7M6JKf3ufc61C8Ya96V-ENYuP0YGeu2jJ5mA_vZC
-        G-m0bVLlmHBuPHASdZXkbVQ",
+        JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
+        ovL2lkcDEuZXhhbXBsZS5vcmciLCJqdGkiOiJ5Ry04eGZtT29UN0Q0RERNIiwicmVsYXRlZF
+        91c2VycyI6eyJvYnNlcnZlciI6Inc5Y2ZQWjRIVEJUd1pyZGZlaWp2bmcifSwic3ViIjoiaH
+        R0cHM6Ly9mcm9tLmV4YW1wbGUub3JnIiwidG9fdGEiOiJodHRwczovL3RvLmV4YW1wbGUub3
+        JnIn0.GKQzqJ3r_ClPBo5j_uQYwllqJ1IrFb8SJWzbO1oF0mFxsowtLWkWGowuGPDnifoCek
+        3rtssc0WlaVO8JriBLGA",
     "users": {
         "observer": "8C673B6A4060F26C"
     },
@@ -278,6 +278,13 @@ IdP は以下のように要請元仲介リクエストを検証しなければ�
             * リクエストに `users` が含まれていた場合は必須。
               そうでなければ無し。
               リクエストの `users` に含まれていた全てのアカウントタグの配列。
+        * **`ref_hash`**
+            * リクエストの `response_type` が `referral` を含む、または、リクエストの `grant_type` が `referral` の場合は必須。
+              そうでなければ無し。
+              リクエストの `response_type` が `referral` を含む場合は発行した `referral` のハッシュ値。
+              リクエストの `grant_type` が `referral` の場合はリクエストの `referral` のハッシュ値。
+              ハッシュ値はハッシュ値計算アルゴリズムの出力バイト列の前半分を Base64URL エンコードしたものである。
+              ハッシュ値計算アルゴリズムは `referral` の値の [JWT] が含む `hash_alg` クレームと同じでなければならない。
 * **`referral`**
     * リクエストの `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
@@ -305,7 +312,7 @@ IdP は以下のように要請元仲介リクエストを検証しなければ�
         * **`related_users`**
             * 必須。
               リクエストの `related_users` の内容そのまま。
-        * **`u_hash_alg`**
+        * **`hash_alg`**
             * 必須。
               `related_users` におけるアカウント ID のハッシュ値計算アルゴリズム。
 
@@ -318,17 +325,18 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIiwic3ViIjoicDktRnB4WHhYQnQ1
-        UFFyTTktNlQtdDNsOWVTejFuIiwidXNlcl90YWciOiJpbnZpdGVyIiwidXNlcl90YWdzIjpb
-        Imludml0ZWUiXX0.LbeGtNDdweG2nG2Nj-kLzaRu_87zCx--wB7jVQT3OohZrhuQBlVy7CM6
-        Ir6pxeQ-QDT9O-h2wnNh5oCb_FzvUg",
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tF
+        UFNPaXdfWmlOV2NyS2ZRIiwic3ViIjoicDktRnB4WHhYQnQ1UFFyTTktNlQtdDNsOWVTejFu
+        IiwidXNlcl90YWciOiJpbnZpdGVyIiwidXNlcl90YWdzIjpbImludml0ZWUiXX0.iddemdnW
+        _WVm_sNeJ21F9hHScmRu8Y2bCD3lUZqA5ZmPRZ9PN2yBBqzFODSgEMWIO9G566bsgjES3lYC
+        k_Xeeg",
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
-        JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaXNzIjoiaHR0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIi
-        wianRpIjoieUctOHhmbU9vVDdENERETSIsInJlbGF0ZWRfdXNlcnMiOnsib2JzZXJ2ZXIiOi
-        J3OWNmUFo0SFRCVHdacmRmZWlqdm5nIn0sInN1YiI6Imh0dHBzOi8vZnJvbS5leGFtcGxlLm
-        9yZyIsInRvX3RhIjoiaHR0cHM6Ly90by5leGFtcGxlLm9yZyIsInVfaGFzaF9hbGciOiJTSE
-        EyNTYifQ.jwrIhEKtkSTkeqTL57hc_Se7M6JKf3ufc61C8Ya96V-ENYuP0YGeu2jJ5mA_vZC
-        G-m0bVLlmHBuPHASdZXkbVQ"
+        JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
+        ovL2lkcDEuZXhhbXBsZS5vcmciLCJqdGkiOiJ5Ry04eGZtT29UN0Q0RERNIiwicmVsYXRlZF
+        91c2VycyI6eyJvYnNlcnZlciI6Inc5Y2ZQWjRIVEJUd1pyZGZlaWp2bmcifSwic3ViIjoiaH
+        R0cHM6Ly9mcm9tLmV4YW1wbGUub3JnIiwidG9fdGEiOiJodHRwczovL3RvLmV4YW1wbGUub3
+        JnIn0.GKQzqJ3r_ClPBo5j_uQYwllqJ1IrFb8SJWzbO1oF0mFxsowtLWkWGowuGPDnifoCek
+        3rtssc0WlaVO8JriBLGA"
 }
 ```
 
@@ -344,7 +352,8 @@ Content-Type: application/json
     "user_tag": "inviter",
     "user_tags": [
         "invitee"
-    ]
+    ],
+    "ref_hash": "v7yvGkEPSOiw_ZiNWcrKfQ"
 }
 ```
 
@@ -363,7 +372,7 @@ Content-Type: application/json
     "related_users": {
         "observer": "w9cfPZ4HTBTwZrdfeijvng"
     },
-    "u_hash_alg": "SHA256"
+    "hash_alg": "SHA256"
 }
 ```
 
@@ -388,13 +397,14 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwic3ViIjoieG9LcE9LQ2xEM1VR
-        TktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.Ag30DXa25Xi
-        ZjuyJHKTn6tr3bZZsnpLihGrEknwx6RDn7-8Bm1IC5jFo9fVCQelxAbK3vGXGAibWWju5rLh
-        E3ca8ufFsyLEzPatS8ARWsZeBcXYLv6i6XWTE0ir7BYKkxz91rFgoHmezys3ABfDP_8dbenj
-        T6nTYsrKzwx2SoC71atensWPjKDXQb14-zxkGkEqr--CB81GBeu07q1mPKKIi7SAI6aVe4nL
-        Mcrdr4F-0hzD__EWDcyzlrV8orhAtTrElGtD2T7foEpT1x_Vp3wdAAfUBGo6yqhMvU45gsM-
-        AOmd-9ORUgPDiHzeOFmvJOC40E6jde6WPwCRUHnUqHg"
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tF
+        UFNPaXdfWmlOV2NyS2ZRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
+        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.eNgB4m-YZbkSseDO7wBUlsMs-DSQCt7nKqh
+        zMgv4pkJw9pnU0prPXbVJ6-76gAdAqwRZkTN7OkR-RmcrHSq1I4zdi_OT7ce1As7Mtk6BCfo
+        lq_RaKCQsJkEF3rZUIYj_6oTBW-WLtLuMi0bw7BEcKit04wC4blRClys_a4sQ23mvuvYftd2
+        YgvbInv7shXlmksdxyxjoJOMJ4hnr5iYU6p2mhc4T9hM5cBg21N5ZqtIcGl0-nNo_5jdUPMQ
+        Glir2vw8uq_tvVU8pEBhVBPQfdnMPs01j-jMXFf9Mt22ptKRLsWl8O5j5yIPnV8tgwwQpjhl
+        m0ObqMO2sK88UUxBGzg"
 }
 ```
 
@@ -409,7 +419,8 @@ Content-Type: application/json
     "aud": "https://to.example.org",
     "user_tags": [
         "observer"
-    ]
+    ],
+    "ref_hash": "v7yvGkEPSOiw_ZiNWcrKfQ"
 }
 ```
 
@@ -474,18 +485,18 @@ Content-Type: application/json
 ```json
 [
     "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIiwic3ViIjoicDktRnB4WHhYQnQ1UFFyTTktNlQtdDNsOW
-    VTejFuIiwidXNlcl90YWciOiJpbnZpdGVyIiwidXNlcl90YWdzIjpbImludml0ZWUiXX0.LbeGtN
-    DdweG2nG2Nj-kLzaRu_87zCx--wB7jVQT3OohZrhuQBlVy7CM6Ir6pxeQ-QDT9O-h2wnNh5oCb_F
-    zvUg",
+    R0cHM6Ly9pZHAxLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tFUFNPaXdfWmlOV2NyS2
+    ZRIiwic3ViIjoicDktRnB4WHhYQnQ1UFFyTTktNlQtdDNsOWVTejFuIiwidXNlcl90YWciOiJpbn
+    ZpdGVyIiwidXNlcl90YWdzIjpbImludml0ZWUiXX0.iddemdnW_WVm_sNeJ21F9hHScmRu8Y2bCD
+    3lUZqA5ZmPRZ9PN2yBBqzFODSgEMWIO9G566bsgjES3lYCk_Xeeg",
     "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3
-    VuLVZyIiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.Ag30DXa25XiZjuyJHKTn6tr3bZZsnpLih
-    GrEknwx6RDn7-8Bm1IC5jFo9fVCQelxAbK3vGXGAibWWju5rLhE3ca8ufFsyLEzPatS8ARWsZeBc
-    XYLv6i6XWTE0ir7BYKkxz91rFgoHmezys3ABfDP_8dbenjT6nTYsrKzwx2SoC71atensWPjKDXQb
-    14-zxkGkEqr--CB81GBeu07q1mPKKIi7SAI6aVe4nLMcrdr4F-0hzD__EWDcyzlrV8orhAtTrElG
-    tD2T7foEpT1x_Vp3wdAAfUBGo6yqhMvU45gsM-AOmd-9ORUgPDiHzeOFmvJOC40E6jde6WPwCRUH
-    nUqHg"
+    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJ2N3l2R2tFUFNPaXdfWmlOV2NyS2
+    ZRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
+    9ic2VydmVyIl19.eNgB4m-YZbkSseDO7wBUlsMs-DSQCt7nKqhzMgv4pkJw9pnU0prPXbVJ6-76g
+    AdAqwRZkTN7OkR-RmcrHSq1I4zdi_OT7ce1As7Mtk6BCfolq_RaKCQsJkEF3rZUIYj_6oTBW-WLt
+    LuMi0bw7BEcKit04wC4blRClys_a4sQ23mvuvYftd2YgvbInv7shXlmksdxyxjoJOMJ4hnr5iYU6
+    p2mhc4T9hM5cBg21N5ZqtIcGl0-nNo_5jdUPMQGlir2vw8uq_tvVU8pEBhVBPQfdnMPs01j-jMXF
+    f9Mt22ptKRLsWl8O5j5yIPnV8tgwwQpjhlm0ObqMO2sK88UUxBGzg"
 ]
 ```
 
@@ -528,6 +539,7 @@ X-Edo-Cooperation-Codes ヘッダに入れる。
 * 仲介データの各 [JWT] の署名を検証する。
 * 仲介データの各 [JWT] が必要なクレームを含むことを確認する。
 * 仲介データの各 [JWT] の `aud` クレームが自分の ID を含むことを確認する。
+* 仲介データに複数の [JWT] が含まれる場合、`ref_hash` クレームが含まれ、値が等しいことを確認する。
 * `user_tag` クレームを含む [JWT] が仲介データの中にただ 1 つだけ存在することを確認する。
 * 異なるアカウントに同じアカウントタグが付けられていないことを確認する。
 
