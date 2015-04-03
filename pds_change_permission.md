@@ -87,7 +87,7 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
         * `path`
             * 必須。
               データのパス。
-              ディレクトリを指す場合はサブツリー全体を変更することを意味する。
+              ディレクトリを指す場合はサブツリー全体の権限を変更することを意味する。
         * `access_users`
             * 任意。
               アクセス権限を変更されるアカウントのアカウントタグの配列。
@@ -105,7 +105,7 @@ PDS は変更要請エンドポイントを TLS で提供しなければなら�
               `+r` 等。
         * `essential`
             * 任意。
-              変更が拒否された場合に他の変更も破棄するかどうか。
+              変更が拒否された場合に他の変更を破棄するかどうか。
               無指定の場合、偽（他の変更は適用する）。
         * `check_exist`
             * 任意。
@@ -334,10 +334,8 @@ PDS はユーザーに対して、非明示的には合意できない変更対�
 
 ```HTTP
 HTTP/1.1 302 Found
-Location: https://reader.example.org/return/chmod?
-    applied=%5B%22profile%22%5D
-    &denied=%5B%22diary%22%5D
-    &state=SiuR29g1Iu
+Location: https://reader.example.org/return/chmod?applied=%5B%22profile%22%5D
+    &denied=%5B%22diary%22%5D&state=SiuR29g1Iu
 ```
 
 ヘッダ値の改行とインデントは表示の都合による。
