@@ -78,7 +78,7 @@ TA から別の TA に処理を要請する際のプロトコル。
 要請元 TA から IdP の要請元仲介エンドポイントにリクエストを送る。
 
 リクエストの中身は、処理の主体が IdP に属すかどうかで変わる。
-また、処理の主体が属さない IdP へのリクエストには、処理の主体が属す IdP へのリクエスト結果が必要になるため、最初に処理の主体が属す IdP へのリクエストを行う必要がある。
+また、処理の主体が属さない IdP へのリクエストには、処理の主体が属す IdP へのリクエストの結果が必要になるため、最初に処理の主体が属す IdP へのリクエストを行う必要がある。
 
 
 ### 4.1. 要請元仲介エンドポイント
@@ -104,7 +104,7 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
       処理の主体に対する有効なアクセストークン。
 * **`scope`**
     * 任意。
-      要請先 TA に新しく発行されるアクセストークンのスコープの最大範囲。
+      要請先 TA に新しく発行されるアクセストークンに許可されるスコープの最大範囲。
       `access_token` で指定したアクセストークンに許可されていないスコープを含んではならない。
 * **`expires_in`**
     * 任意。
@@ -120,16 +120,11 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
 * **`related_users`**
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
-      他の IdP に属す関連するアカウント全てについて、アカウントタグからアカウント ID のハッシュ値へのマップ。
-      ハッシュ値はハッシュ値計算アルゴリズムの出力バイト列の前半分を Base64URL エンコードしたものである。
+      他の IdP に属す関連するアカウント全てについて、アカウントタグからアカウントのハッシュ値へのマップ。
 * **`hash_alg`**
-    * `related_users` におけるアカウント ID のハッシュ値計算アルゴリズムが IdP 側のデフォルトと異なる場合は必須。
+    * `related_users` におけるアカウントのハッシュ値計算アルゴリズムが IdP 側の既定値と異なる場合は必須。
       同じであれば任意。
-      `related_users` におけるアカウント ID のハッシュ値計算アルゴリズム。
-      以下のいずれかでなければならない。
-        * `SHA256`
-        * `SHA384`
-        * `SHA512`
+      `related_users` におけるアカウントのハッシュ値計算アルゴリズム。
 * **`related_issuers`**
     * `response_type` が `referral` を含む場合は必須。
       そうでなければ無し。
@@ -140,7 +135,28 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
 その際、application/x-www-form-urlencoded フォームパラメータとして含めるはずのものは、代わりに JSON の最上位要素として含める。
 
 
-#### 4.2.1. 処理の主体が属す IdP への要請元仲介リクエスト例
+#### 4.2.1. アカウントのハッシュ値
+
+`related_users` におけるアカウントのハッシュ値は以下のように計算する。
+
+まず、アカウントが属す IdP の ID とアカウント ID を連結する。
+それをハッシュ値計算アルゴリズムの入力にする。
+
+```
+Hash(<アカウントが属す IdP の ID> || <アカウント ID>)
+```
+
+この結果得られた出力バイト列の前半分を Base64URL エンコードする。
+この文字列がアカウントのハッシュ値である。
+
+ハッシュ値計算アルゴリズムとしては以下を認める。
+
+* `SHA256`
+* `SHA384`
+* `SHA512`
+
+
+#### 4.2.2. 処理の主体が属す IdP への要請元仲介リクエスト例
 
 ```HTTP
 POST /cooperation/from HTTP/1.1
@@ -157,7 +173,7 @@ Content-Type: application/json
         "invitee": "EDD42F10C0199426"
     },
     "related_users": {
-        "observer": "w9cfPZ4HTBTwZrdfeijvng"
+        "observer": "C18rjier2NtHrctYAv_f1w"
     },
     "related_issuers": [
         "https://idp2.example.org"
@@ -202,10 +218,10 @@ Content-Type: application/json
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
         ovL2lkcC5leGFtcGxlLm9yZyIsImp0aSI6InlHLTh4Zm1Pb1Q3RDRERE0iLCJyZWxhdGVkX3
-        VzZXJzIjp7Im9ic2VydmVyIjoidzljZlBaNEhUQlR3WnJkZmVpanZuZyJ9LCJzdWIiOiJodH
+        VzZXJzIjp7Im9ic2VydmVyIjoiQzE4cmppZXIyTnRIcmN0WUF2X2YxdyJ9LCJzdWIiOiJodH
         RwczovL2Zyb20uZXhhbXBsZS5vcmciLCJ0b190YSI6Imh0dHBzOi8vdG8uZXhhbXBsZS5vcm
-        cifQ.1UZ5BpKVWCWzI3IKO_k_KUankXGZNWrVWA890lekzsOzyagZvYAkVxKKgI6k8OatRQn
-        sS89R3nl2knDYMIXfGQ",
+        cifQ.uj1i0nGxnRjZFV6KJweN_6PWfUI1tYRgI-J2oS4qT8BEk9hfPTOPrf1ox2-PJ-VrJbu
+        I76fAZma7e3GmhoL3nQ",
     "users": {
         "observer": "8C673B6A4060F26C"
     },
@@ -314,7 +330,7 @@ IdP は以下のように要請元仲介リクエストを検証しなければ�
               リクエストの `related_users` の内容そのまま。
         * **`hash_alg`**
             * 必須。
-              `related_users` におけるアカウント ID のハッシュ値計算アルゴリズム。
+              `related_users` におけるアカウントのハッシュ値計算アルゴリズム。
 
 
 #### 5.1.1. 処理の主体が属す IdP からの要請元仲介レスポンス例<a name="main-from-response-example" />
@@ -325,18 +341,18 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IkZzaWNXVXdW
-        TDBzTUVBdGNtN2pJQlEiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4i
-        LCJ1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.K2KLEkl7S
-        24Pex2GzgnFTPSicfvAFHy6SYbCK52_jjOalLiVmeP2SAIiVB-UuRLoLP8LswAerjuqqnuNz
-        vRX4g",
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IklBV3ZFcll5
+        c0I2MFFSSm1kSnYwdkEiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4i
+        LCJ1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.GXcQAkuO9
+        uu2DEq2Zn4nc0RVmkFklirP5JLX6Y0F1a1qsRMAbEV5lX8sAoeJ6E0luJ2rCV5wK1R9sQ0H9
+        ZWpUA",
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
         ovL2lkcC5leGFtcGxlLm9yZyIsImp0aSI6InlHLTh4Zm1Pb1Q3RDRERE0iLCJyZWxhdGVkX3
-        VzZXJzIjp7Im9ic2VydmVyIjoidzljZlBaNEhUQlR3WnJkZmVpanZuZyJ9LCJzdWIiOiJodH
+        VzZXJzIjp7Im9ic2VydmVyIjoiQzE4cmppZXIyTnRIcmN0WUF2X2YxdyJ9LCJzdWIiOiJodH
         RwczovL2Zyb20uZXhhbXBsZS5vcmciLCJ0b190YSI6Imh0dHBzOi8vdG8uZXhhbXBsZS5vcm
-        cifQ.1UZ5BpKVWCWzI3IKO_k_KUankXGZNWrVWA890lekzsOzyagZvYAkVxKKgI6k8OatRQn
-        sS89R3nl2knDYMIXfGQ"
+        cifQ.uj1i0nGxnRjZFV6KJweN_6PWfUI1tYRgI-J2oS4qT8BEk9hfPTOPrf1ox2-PJ-VrJbu
+        I76fAZma7e3GmhoL3nQ"
 }
 ```
 
@@ -353,7 +369,7 @@ Content-Type: application/json
     "user_tags": [
         "invitee"
     ],
-    "ref_hash": "FsicWUwVL0sMEAtcm7jIBQ"
+    "ref_hash": "IAWvErYysB60QRJmdJv0vA"
 }
 ```
 
@@ -370,7 +386,7 @@ Content-Type: application/json
     "jti": "yG-8xfmOoT7D4DDM",
     "to_ta": "https://to.example.org",
     "related_users": {
-        "observer": "w9cfPZ4HTBTwZrdfeijvng"
+        "observer": "C18rjier2NtHrctYAv_f1w"
     },
     "hash_alg": "SHA256"
 }
@@ -397,14 +413,14 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJGc2ljV1V3
-        Vkwwc01FQXRjbTdqSUJRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
-        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.pgbKhXoBJiukElsiISdjkhR6mYsEJhcsdo9
-        HsLk2ZijWqB2IwBDNGiOm6HefODba95wvnGeIw5m69lyUs-wLSFMcmzoeZSu3ev6TZO-fhaq
-        8wIGU4i_iUCxpojRoJ8-OtL1o55Bbt0qZ-ICjM1Wgv8dtI36vkIDG8g9TiHnMTMk6_34a9xB
-        XbwMfYlMM64PEe4IEDMF3wPLLY9FM5wuu069VM95T21zqv8MFVpANZxBz7q7wVUSpCJumusV
-        o0L3Z_39vIiy4ZXaXqoDkiInRCSBSwZeeNINgvnHU2IYQO5xdYIrTq0tTJOdHxZdtuJ7Yb_a
-        gpdzK1hw03oQYUAiuEg"
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJJQVd2RXJZ
+        eXNCNjBRUkptZEp2MHZBIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
+        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.go3NNfOyHuHZGVDhT16cbILoiekZxicFeRG
+        KxxFWUAOGpzjJXofJvXhCIODD8IDId5I5MTSZbigqJR9R5lSZu4aaLpuIe_6FlKGrtGe2_Vn
+        jR1RnnRj4iNvKzm-aLb0c8JrdkSNd2qpP_vPEUkU_eiR-u1_IIbgNRR1qx-3UpnMlOspVSA-
+        nEtJDdJWeX5DponIW3t5ZC_oEBG8NnEqCVy9qZqTNtpfWuFHjpFZrHRRibHBBZ_2BHfdFrZy
+        6OlFUJkV8VwrLpihI20MzihNMI-zXmC2T1HVOSm1P-OZMlo8JAZJnTy_xalQ93FhSa5ymlwh
+        7n8oWHxkvy7yqa4U9Ng"
 }
 ```
 
@@ -420,7 +436,7 @@ Content-Type: application/json
     "user_tags": [
         "observer"
     ],
-    "ref_hash": "FsicWUwVL0sMEAtcm7jIBQ"
+    "ref_hash": "IAWvErYysB60QRJmdJv0vA"
 }
 ```
 
@@ -462,6 +478,7 @@ Content-Type: application/json
 ### 5.2. 要請元仲介レスポンスの検証
 
 要請元 TA は要請元仲介レスポンスのパラメータとその [JWT] に含まれるクレームを検証するべきである。
+特に、`user_tag` と `user_tags` クレームにリクエストしたアカウントタグが含まれていることを確認すべきである。
 また、[JWT] の署名を検証しても良い。
 
 
@@ -485,18 +502,18 @@ Content-Type: application/json
 ```json
 [
     "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IkZzaWNXVXdWTDBzTUVBdGNtN2pJQl
+    R0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IklBV3ZFcll5c0I2MFFSSm1kSnYwdk
     EiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c2VyX3RhZyI6Imludm
-    l0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.K2KLEkl7S24Pex2GzgnFTPSicfvAFHy6SYb
-    CK52_jjOalLiVmeP2SAIiVB-UuRLoLP8LswAerjuqqnuNzvRX4g",
+    l0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.GXcQAkuO9uu2DEq2Zn4nc0RVmkFklirP5JL
+    X6Y0F1a1qsRMAbEV5lX8sAoeJ6E0luJ2rCV5wK1R9sQ0H9ZWpUA",
     "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJGc2ljV1V3Vkwwc01FQXRjbTdqSU
-    JRIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
-    9ic2VydmVyIl19.pgbKhXoBJiukElsiISdjkhR6mYsEJhcsdo9HsLk2ZijWqB2IwBDNGiOm6HefO
-    Dba95wvnGeIw5m69lyUs-wLSFMcmzoeZSu3ev6TZO-fhaq8wIGU4i_iUCxpojRoJ8-OtL1o55Bbt
-    0qZ-ICjM1Wgv8dtI36vkIDG8g9TiHnMTMk6_34a9xBXbwMfYlMM64PEe4IEDMF3wPLLY9FM5wuu0
-    69VM95T21zqv8MFVpANZxBz7q7wVUSpCJumusVo0L3Z_39vIiy4ZXaXqoDkiInRCSBSwZeeNINgv
-    nHU2IYQO5xdYIrTq0tTJOdHxZdtuJ7Yb_agpdzK1hw03oQYUAiuEg"
+    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJJQVd2RXJZeXNCNjBRUkptZEp2MH
+    ZBIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
+    9ic2VydmVyIl19.go3NNfOyHuHZGVDhT16cbILoiekZxicFeRGKxxFWUAOGpzjJXofJvXhCIODD8
+    IDId5I5MTSZbigqJR9R5lSZu4aaLpuIe_6FlKGrtGe2_VnjR1RnnRj4iNvKzm-aLb0c8JrdkSNd2
+    qpP_vPEUkU_eiR-u1_IIbgNRR1qx-3UpnMlOspVSA-nEtJDdJWeX5DponIW3t5ZC_oEBG8NnEqCV
+    y9qZqTNtpfWuFHjpFZrHRRibHBBZ_2BHfdFrZy6OlFUJkV8VwrLpihI20MzihNMI-zXmC2T1HVOS
+    m1P-OZMlo8JAZJnTy_xalQ93FhSa5ymlwh7n8oWHxkvy7yqa4U9Ng"
 ]
 ```
 
@@ -536,9 +553,8 @@ X-Edo-Cooperation-Codes ヘッダに入れる。
 要請先 TA は以下のように処理要請リクエストを検証しなければならない。
 
 * 仲介データが付加されていることを確認する。
-* 仲介データの各 [JWT] の署名を検証する。
+* 仲介データの各 [JWT] を署名済み [JWT] として検証する。
 * 仲介データの各 [JWT] が必要なクレームを含むことを確認する。
-* 仲介データの各 [JWT] の `aud` クレームが自分の ID を含むことを確認する。
 * 仲介データに複数の [JWT] が含まれる場合、`ref_hash` クレームが含まれ、値が等しいことを確認する。
 * `user_tag` クレームを含む [JWT] が仲介データの中にただ 1 つだけ存在することを確認する。
 * 異なるアカウントに同じアカウントタグが付けられていないことを確認する。
@@ -797,7 +813,7 @@ Content-Type: application/json
 ## 9. セッション
 
 関連するアカウントが処理の主体のみ、かつ、要請先 TA に発行されたアクセストークンが有効である間は、上記プロトコルを省いても良い。
-この場合、まず要請先 TA から要請元 TA へのレスポンスの際に、Set-Cookie ヘッダで以下のセッションを宣言する必要がある。
+この場合、まず要請先 TA から要請元 TA へのレスポンスの際に、Set-Cookie ヘッダでセッションを宣言する必要がある。
 
 |Cookie 名|値|
 |:--|:--|
@@ -814,6 +830,7 @@ IdP からのエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 要請先 TA において、本プロトコルでのエラーが発生した場合、要請元 TA へのレスポンスに以下のヘッダを含めなければならない。
 
 |HTTP ヘッダ|値|
+|:--|:--|
 |X-Edo-Cooperation-Error|適切なメッセージ|
 
 その他の形式は要請先 TA の裁量である。
