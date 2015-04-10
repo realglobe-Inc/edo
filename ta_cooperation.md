@@ -760,7 +760,7 @@ Content-Type: application/json
 署名に使用した鍵は[処理の主体が属す IdP からの要請元仲介レスポンス例](#main-from-response-example)と同じ。
 
 
-#### 8.1.2 処理の主体が属さない IdP からの要請先仲介レスポンス例
+#### 8.1.2. 処理の主体が属さない IdP からの要請先仲介レスポンス例
 
 ```HTTP
 HTTP/1.1 200 OK
