@@ -115,7 +115,7 @@ self/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 
 以下の要素を含むオブジェクトにより指定する。
 
-* **`user_tag`**
+* **`owner_tag`**
     * アカウントタグ。
 * **`ta`**
     * TA の ID。
@@ -129,7 +129,7 @@ self/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 
 ```json
 {
-    "user_tag": "self",
+    "owner_tag": "self",
     "ta": "https://writer.example.org",
     "path": "/profile/career",
     "dty": "octet-stream"
