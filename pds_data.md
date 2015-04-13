@@ -23,7 +23,7 @@ limitations under the License.
 ## 1. 概要
 
 [TA 間連携プロトコル]の利用を前提とする。
-[TA 間連携プロトコル]により、アクセスの主体およびアクセス元 TA が PDS に通知される。
+[TA 間連携プロトコル]により、アクセス主体およびアクセス元 TA が PDS に通知される。
 加えて、アクセスするデータと操作の種類を指定することで、データアクセスに必要な情報を揃える。
 
 
@@ -65,7 +65,7 @@ URL または JSON により項目を指定することで、アクセスする�
 
 * アカウントタグ
     * 必須。
-      アクセスするデータを保持者するアカウントのアカウントタグ。
+      アクセスするデータを所有するアカウントのアカウントタグ。
       [TA 間連携プロトコル]で付けたアカウントタグでなければならない。
 * TA の ID
     * 必須。
@@ -84,7 +84,7 @@ URL または JSON により項目を指定することで、アクセスする�
 
 |項目|例|
 |:--|:--|
-|アカウントタグ|user|
+|アカウントタグ|self|
 |TA の ID|https://writer.example.org|
 |パス|/profile/career|
 |データ型|`octet-stream`|
@@ -92,7 +92,7 @@ URL または JSON により項目を指定することで、アクセスする�
 
 ### 4.2. URL による指定
 
-アカウントタグと TA の ID を [URL エンコード]した上で、パスと共に以下の形でデータアクセスエンドポイントに続けて指定する。
+アカウントタグと TA の ID を[パーセントエンコード]した上で、パスと共に以下の形でデータアクセスエンドポイントに続けて指定する。
 
 ```
 <アカウントタグ>/<TA の ID><パス>
@@ -107,7 +107,7 @@ URL または JSON により項目を指定することで、アクセスする�
 #### 4.2.1. URL による指定例
 
 ```
-user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
+self/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 ```
 
 
@@ -129,7 +129,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 
 ```json
 {
-    "user_tag": "user",
+    "user_tag": "self",
     "ta": "https://writer.example.org",
     "path": "/profile/career",
     "dty": "octet-stream"
@@ -208,7 +208,7 @@ user/https%3A%2F%2Fwriter.example.org/profile/career?dty=octet-stream
 リクエストは、
 
 ```HTTP
-GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
+GET /data/self/https%3A%2F%2Fwriter.example.org/profile/career HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -255,7 +255,7 @@ Content-Type: application/octet-stream
 リクエストは、
 
 ```HTTP
-GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
+GET /data/self/https%3A%2F%2Fwriter.example.org/profile/career?rty=metadata HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -292,7 +292,7 @@ Content-Type: application/json
 ```json
 {
     "permission": {
-        <アカウントタグ>: {
+        <アクセス主体のアカウントタグ>: {
             <アクセス元 TA の ID>: <アクセス権限>,
             ...
             "*": <アクセス権限>
@@ -313,7 +313,7 @@ Content-Type: application/json
 リクエストは、
 
 ```HTTP
-GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career?rty=permission HTTP/1.1
+GET /data/self/https%3A%2F%2Fwriter.example.org/profile/career?rty=permission HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -355,8 +355,8 @@ Content-Type: application/json
 リクエストは、
 
 ```HTTP
-GET /data/user/https%3A%2F%2Fwriter.example.org/profile/career?
-    rty=content+metadata+permission HTTP/1.1
+GET /data/self/https%3A%2F%2Fwriter.example.org/profile/career?
+    rty=content%20metadata%20permission HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -438,7 +438,7 @@ X-Pds-Datainfo: eyJhbGciOiJub25lIn0.eyJieXRlcyI6MTAyLCJjcmVhdGVfdXNlciI6InNlbGYi
 リクエストは、
 
 ```HTTP
-PUT /data/user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
+PUT /data/self/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 
 食っちゃ寝。
@@ -463,7 +463,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-DELETE /data/user/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
+DELETE /data/self/https%3A%2F%2Fwriter.example.org/profile/hobby HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -523,7 +523,7 @@ HTTP/1.1 204 No Content
     * 再帰フラグが立っていて、かつ、データがディレクトリの場合のみ。
       ディレクトリ内のデータの情報。
 
-ディレクトリ内読み込みタイプに `metadata` や `permission` を指定した場合に追加される情報は、メタデータやアクセス権限の読み取りで得られるものと同じ。
+ディレクトリ内読み込みタイプに `metadata` や `permission` を指定した場合に追加される情報は、メタデータやアクセス権限の読み取りで得られるものと同じである。
 
 
 ##### 7.1.1.1. ディレクトリの読み取り例
@@ -531,7 +531,7 @@ HTTP/1.1 204 No Content
 リクエストは、
 
 ```HTTP
-GET /data/user/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
+GET /data/self/https%3A%2F%2Fwriter.example.org/profile/?recursive=true HTTP/1.1
 Host: pds.example.org
 ```
 
@@ -572,7 +572,7 @@ Content-Type: application/json
 ### 7.3. 削除操作
 
 指定項目として読み取り操作と同じ再帰フラグが追加される。
-空でないディレクトリを削除する場合、再帰フラグは必須とする。
+空でないディレクトリを削除する場合、再帰フラグは必須である。
 それ以外は `octet-stream` 型と変わらない。
 
 
@@ -582,8 +582,6 @@ Content-Type: application/json
 
 `error` の値として以下を追加する。
 
-* **`directory_not_exist`**
-    * 親ディレクトリが存在しない。
 * **`invalid_dty`**
     * データ型が異なる。
 * **`not_empty`**
@@ -597,7 +595,7 @@ Content-Type: application/json
 * データ型が実際のデータ型と異なる場合、`invalid_dty`。
 * 対象のデータが存在しない場合、`not_exist`。
 * アクセス権限が無い場合、`access_denied`。
-* 親ディレクトリ作成フラグ無しで存在しないディレクトリの中にデータを作成しようとした場合、`directory_not_exist`。
+* 親ディレクトリ作成フラグ無しで存在しないディレクトリの中にデータを作成しようとした場合、`not_exist`。
 * 作成しようとした親ディレクトリが別のデータ型として存在する場合、`invalid_dty`。
 * 再帰フラグ無しで空でないディレクトリを削除しようとした場合、`not_empty`。
 
@@ -608,5 +606,5 @@ Content-Type: application/json
 [PDS 権限変更プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/pds_change_permission.md
 [RFC3339]: http://tools.ietf.org/html/rfc3339
 [TA 間連携プロトコル]: https://github.com/realglobe-Inc/edo/blob/master/ta_cooperation.md
-[URL エンコード]: http://tools.ietf.org/html/rfc1866#section-8.2.1
+[パーセントエンコード]: http://tools.ietf.org/html/rfc3986#section-2.1
 [アクセス制御]: https://github.com/realglobe-Inc/edo/blob/master/access_control.md
