@@ -104,8 +104,8 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
       処理の主体に対する有効なアクセストークン。
 * **`scope`**
     * 任意。
-      要請先 TA に新しく発行されるアクセストークンに許可されるスコープの最大範囲。
-      `access_token` で指定したアクセストークンに許可されていないスコープを含んではならない。
+      要請先 TA に新しく発行されるアクセストークンに対して許可されるスコープの最大範囲。
+      `access_token` で指定したアクセストークンに対して許可されていないスコープを含んではならない。
 * **`expires_in`**
     * 任意。
       要請先 TA に新しく発行されるアクセストークンの有効期間の上限。
@@ -139,15 +139,15 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
 
 `related_users` におけるアカウントのハッシュ値は以下のように計算する。
 
-まず、アカウントが属す IdP の ID とアカウント ID を連結する。
+アカウントが属す IdP の ID とアカウント ID をヌル文字で連結したバイト列をつくる。
 それをハッシュ値計算アルゴリズムの入力にする。
+出力されたバイト列の前半分を Base64URL エンコードする。
+できた文字列がアカウントのハッシュ値である。
 
 ```
-Hash(<アカウントが属す IdP の ID> || <アカウント ID>)
+Base64URLEncode(LeftHalf(Hash(<IdP の ID> || <ヌル文字> || <アカウント ID>)))
 ```
 
-この結果得られた出力バイト列の前半分を Base64URL エンコードする。
-この文字列がアカウントのハッシュ値である。
 
 ハッシュ値計算アルゴリズムとしては以下を認める。
 
@@ -173,7 +173,7 @@ Content-Type: application/json
         "invitee": "EDD42F10C0199426"
     },
     "related_users": {
-        "observer": "C18rjier2NtHrctYAv_f1w"
+        "observer": "U6guzh1C2nc39ftBMS9-FA"
     },
     "related_issuers": [
         "https://idp2.example.org"
@@ -218,10 +218,10 @@ Content-Type: application/json
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
         ovL2lkcC5leGFtcGxlLm9yZyIsImp0aSI6InlHLTh4Zm1Pb1Q3RDRERE0iLCJyZWxhdGVkX3
-        VzZXJzIjp7Im9ic2VydmVyIjoiQzE4cmppZXIyTnRIcmN0WUF2X2YxdyJ9LCJzdWIiOiJodH
+        VzZXJzIjp7Im9ic2VydmVyIjoiVTZndXpoMUMybmMzOWZ0Qk1TOS1GQSJ9LCJzdWIiOiJodH
         RwczovL2Zyb20uZXhhbXBsZS5vcmciLCJ0b190YSI6Imh0dHBzOi8vdG8uZXhhbXBsZS5vcm
-        cifQ.uj1i0nGxnRjZFV6KJweN_6PWfUI1tYRgI-J2oS4qT8BEk9hfPTOPrf1ox2-PJ-VrJbu
-        I76fAZma7e3GmhoL3nQ",
+        cifQ.O5lb4-1hmjL_T7BquTIChPLIFN59PuTYhHfCk7b7LXnYmxYfZij3XEpAeVSgdyb3Wc6
+        -kjQt6GcHiq3bAGfcoA",
     "users": {
         "observer": "8C673B6A4060F26C"
     },
@@ -341,18 +341,18 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IklBV3ZFcll5
-        c0I2MFFSSm1kSnYwdkEiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4i
-        LCJ1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.GXcQAkuO9
-        uu2DEq2Zn4nc0RVmkFklirP5JLX6Y0F1a1qsRMAbEV5lX8sAoeJ6E0luJ2rCV5wK1R9sQ0H9
-        ZWpUA",
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2JW
+        cmdieFhVWVN2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4i
+        LCJ1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0
+        dVzT6KkM2_D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWA
+        VAtfw",
     "referral": "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOlsiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3
         JnIl0sImV4cCI6MTQyNTQ1MjgzNSwiaGFzaF9hbGciOiJTSEEyNTYiLCJpc3MiOiJodHRwcz
         ovL2lkcC5leGFtcGxlLm9yZyIsImp0aSI6InlHLTh4Zm1Pb1Q3RDRERE0iLCJyZWxhdGVkX3
-        VzZXJzIjp7Im9ic2VydmVyIjoiQzE4cmppZXIyTnRIcmN0WUF2X2YxdyJ9LCJzdWIiOiJodH
+        VzZXJzIjp7Im9ic2VydmVyIjoiVTZndXpoMUMybmMzOWZ0Qk1TOS1GQSJ9LCJzdWIiOiJodH
         RwczovL2Zyb20uZXhhbXBsZS5vcmciLCJ0b190YSI6Imh0dHBzOi8vdG8uZXhhbXBsZS5vcm
-        cifQ.uj1i0nGxnRjZFV6KJweN_6PWfUI1tYRgI-J2oS4qT8BEk9hfPTOPrf1ox2-PJ-VrJbu
-        I76fAZma7e3GmhoL3nQ"
+        cifQ.O5lb4-1hmjL_T7BquTIChPLIFN59PuTYhHfCk7b7LXnYmxYfZij3XEpAeVSgdyb3Wc6
+        -kjQt6GcHiq3bAGfcoA"
 }
 ```
 
@@ -369,7 +369,7 @@ Content-Type: application/json
     "user_tags": [
         "invitee"
     ],
-    "ref_hash": "IAWvErYysB60QRJmdJv0vA"
+    "ref_hash": "6Ea63ObVrgbxXUYSvdEp5g"
 }
 ```
 
@@ -386,7 +386,7 @@ Content-Type: application/json
     "jti": "yG-8xfmOoT7D4DDM",
     "to_ta": "https://to.example.org",
     "related_users": {
-        "observer": "C18rjier2NtHrctYAv_f1w"
+        "observer": "U6guzh1C2nc39ftBMS9-FA"
     },
     "hash_alg": "SHA256"
 }
@@ -413,14 +413,14 @@ Content-Type: application/json
 
 {
     "code_token": "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3Jn
-        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJJQVd2RXJZ
-        eXNCNjBRUkptZEp2MHZBIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
-        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.go3NNfOyHuHZGVDhT16cbILoiekZxicFeRG
-        KxxFWUAOGpzjJXofJvXhCIODD8IDId5I5MTSZbigqJR9R5lSZu4aaLpuIe_6FlKGrtGe2_Vn
-        jR1RnnRj4iNvKzm-aLb0c8JrdkSNd2qpP_vPEUkU_eiR-u1_IIbgNRR1qx-3UpnMlOspVSA-
-        nEtJDdJWeX5DponIW3t5ZC_oEBG8NnEqCVy9qZqTNtpfWuFHjpFZrHRRibHBBZ_2BHfdFrZy
-        6OlFUJkV8VwrLpihI20MzihNMI-zXmC2T1HVOSm1P-OZMlo8JAZJnTy_xalQ93FhSa5ymlwh
-        7n8oWHxkvy7yqa4U9Ng"
+        IiwiaXNzIjoiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09i
+        VnJnYnhYVVlTdmRFcDVnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZy
+        IiwidXNlcl90YWdzIjpbIm9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJ
+        EtCV71768u8023EcOTogD2JAx1g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQb
+        Nkd5GHaBIB4vOxNR41wVKm9-cq79dJ3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG
+        2mvRFnhm2kK8_JAvSLlbR43NMlzYC6Txl944a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2
+        gObSIN77yAdY2w04UrttbrGsR2HghdQX7xAPFu1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQ
+        SBJ-yxyyaOaoNUgRHMQ"
 }
 ```
 
@@ -436,7 +436,7 @@ Content-Type: application/json
     "user_tags": [
         "observer"
     ],
-    "ref_hash": "IAWvErYysB60QRJmdJv0vA"
+    "ref_hash": "6Ea63ObVrgbxXUYSvdEp5g"
 }
 ```
 
@@ -494,30 +494,7 @@ Content-Type: application/json
 
 ### 6.2. 仲介データ
 
-仲介データは IdP から受け取った全ての `code_token` の値からなる JSON 配列である。
-
-
-#### 6.2.1. 仲介データ例
-
-```json
-[
-    "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IklBV3ZFcll5c0I2MFFSSm1kSnYwdk
-    EiLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c2VyX3RhZyI6Imludm
-    l0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.GXcQAkuO9uu2DEq2Zn4nc0RVmkFklirP5JL
-    X6Y0F1a1qsRMAbEV5lX8sAoeJ6E0luJ2rCV5wK1R9sQ0H9ZWpUA",
-    "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiJJQVd2RXJZeXNCNjBRUkptZEp2MH
-    ZBIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
-    9ic2VydmVyIl19.go3NNfOyHuHZGVDhT16cbILoiekZxicFeRGKxxFWUAOGpzjJXofJvXhCIODD8
-    IDId5I5MTSZbigqJR9R5lSZu4aaLpuIe_6FlKGrtGe2_VnjR1RnnRj4iNvKzm-aLb0c8JrdkSNd2
-    qpP_vPEUkU_eiR-u1_IIbgNRR1qx-3UpnMlOspVSA-nEtJDdJWeX5DponIW3t5ZC_oEBG8NnEqCV
-    y9qZqTNtpfWuFHjpFZrHRRibHBBZ_2BHfdFrZy6OlFUJkV8VwrLpihI20MzihNMI-zXmC2T1HVOS
-    m1P-OZMlo8JAZJnTy_xalQ93FhSa5ymlwh7n8oWHxkvy7yqa4U9Ng"
-]
-```
-
-[JWT] の改行とインデントは表示の都合による。
+仲介データは IdP から受け取った全ての `code_token` 値の配列である。
 
 
 ### 6.3. 付加方法
@@ -527,14 +504,58 @@ Content-Type: application/json
 
 #### 6.3.1. URL クエリによる付加
 
-`cooperation_codes` パラメータに入れる。
-仲介データは適切にエスケープする。
+空白区切りで `cooperation_codes` パラメータに入れる。
+
+
+##### 6.3.1.1. URL クエリによる付加例
+
+```http
+GET /api/invite/invitee?
+    cooperation_codes=eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub
+    3JnIiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2JWc
+    mdieFhVWVN2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c
+    2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6KkM2
+    _D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw
+    %20eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoi
+    aHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVVlTdmRF
+    cDVnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpb
+    Im9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u8023EcOTogD2JA
+    x1g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB4vOxNR41wVKm9-cq79
+    dJ3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2kK8_JAvSLlbR43NMlzYC6Tx
+    l944a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yAdY2w04UrttbrGsR2HghdQX7xAP
+    Fu1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaOaoNUgRHMQ HTTP/1.1
+Host: to.example.org
+```
+
+改行とインデントは表示の都合による。
 
 
 #### 6.3.2. HTTP ヘッダによる付加
 
-X-Edo-Cooperation-Codes ヘッダに入れる。
-仲介データは適切にエスケープする。
+カンマ区切りで X-Edo-Cooperation-Codes ヘッダに入れる。
+
+
+##### 6.3.2.1. HTTP ヘッダによる付加例
+
+```http
+GET /api/invite/invitee HTTP/1.1
+Host: to.example.org
+X-Edo-Cooperation-Codes: eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbG
+    Uub3JnIiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2
+    JWcmdieFhVWVN2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLC
+    J1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6K
+    kM2_D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw
+    ,eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
+    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVVlTdmRFcD
+    VnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
+    9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u8023EcOTogD2JAx1
+    g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB4vOxNR41wVKm9-cq79dJ
+    3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2kK8_JAvSLlbR43NMlzYC6Txl9
+    44a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yAdY2w04UrttbrGsR2HghdQX7xAPFu
+    1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaOaoNUgRHMQ
+```
+
+改行とインデントは表示の都合による。
 
 
 #### 6.3.3. リクエストボディによる付加
@@ -548,6 +569,38 @@ X-Edo-Cooperation-Codes ヘッダに入れる。
     * X-Edo-Cooperation-Codes-In-Body ヘッダを `true` とする。
 
 
+##### 6.3.3.1. リクエストボディによる付加例
+
+```http
+POST /api/invite HTTP/1.1
+Host: to.example.org
+Content-Type: application/json
+X-Edo-Cooperation-Codes-In-Body: true
+
+{
+    "invitee": [
+        "invitee"
+    ],
+    "cooperation_codes": [
+        "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIj
+        oiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2JWcmdieFhVWV
+        N2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c2VyX3
+        RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6KkM2_
+        D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw",
+        "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIj
+        oiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVV
+        lTdmRFcDVnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl
+        90YWdzIjpbIm9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u
+        8023EcOTogD2JAx1g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB
+        4vOxNR41wVKm9-cq79dJ3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2k
+        K8_JAvSLlbR43NMlzYC6Txl944a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yA
+        dY2w04UrttbrGsR2HghdQX7xAPFu1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaO
+        aoNUgRHMQ"
+    ]
+}
+```
+
+
 ### 6.4. 処理要請リクエストの検証
 
 要請先 TA は以下のように処理要請リクエストを検証しなければならない。
@@ -556,10 +609,11 @@ X-Edo-Cooperation-Codes ヘッダに入れる。
 * 仲介データの各 [JWT] を署名済み [JWT] として検証する。
 * 仲介データの各 [JWT] が必要なクレームを含むことを確認する。
 * 仲介データに複数の [JWT] が含まれる場合、`ref_hash` クレームが含まれ、値が等しいことを確認する。
-* `user_tag` クレームを含む [JWT] が仲介データの中にただ 1 つだけ存在することを確認する。
+* 仲介データの中に `user_tag` クレームを含む [JWT] がただ 1 つだけ存在することを確認する。
 * 異なるアカウントに同じアカウントタグが付けられていないことを確認する。
 
-検証に失敗したときのエラーレスポンスの形式は要請先 TA の裁量であるが、`error` の値を `invalid_request` とした [OAuth 2.0 Section 5.2] 形式にすることを推奨する。
+検証に失敗したときのエラーレスポンスの形式は要請先 TA の裁量である。
+`error` の値を `invalid_request` とした [OAuth 2.0 Section 5.2] 形式にすることを推奨する。
 
 
 ## 7. 要請先仲介リクエスト
@@ -760,7 +814,7 @@ Content-Type: application/json
 署名に使用した鍵は[処理の主体が属す IdP からの要請元仲介レスポンス例](#main-from-response-example)と同じ。
 
 
-#### 8.1.2 処理の主体が属さない IdP からの要請先仲介レスポンス例
+#### 8.1.2. 処理の主体が属さない IdP からの要請先仲介レスポンス例
 
 ```HTTP
 HTTP/1.1 200 OK
