@@ -494,30 +494,7 @@ Content-Type: application/json
 
 ### 6.2. 仲介データ
 
-仲介データは IdP から受け取った全ての `code_token` の値からなる JSON 配列である。
-
-
-#### 6.2.1. 仲介データ例
-
-```json
-[
-    "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2JWcmdieFhVWVN2ZEVwNW
-    ciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c2VyX3RhZyI6Imludm
-    l0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6KkM2_D_WMV5gtXrqYIirP
-    PGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw",
-    "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
-    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVVlTdmRFcD
-    VnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
-    9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u8023EcOTogD2JAx1
-    g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB4vOxNR41wVKm9-cq79dJ
-    3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2kK8_JAvSLlbR43NMlzYC6Txl9
-    44a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yAdY2w04UrttbrGsR2HghdQX7xAPFu
-    1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaOaoNUgRHMQ"
-]
-```
-
-[JWT] の改行とインデントは表示の都合による。
+仲介データは IdP から受け取った全ての `code_token` 値の配列である。
 
 
 ### 6.3. 付加方法
@@ -527,14 +504,58 @@ Content-Type: application/json
 
 #### 6.3.1. URL クエリによる付加
 
-`cooperation_codes` パラメータに入れる。
-仲介データは適切にエスケープする。
+空白区切りで `cooperation_codes` パラメータに入れる。
+
+
+##### 6.3.1.1. URL クエリによる付加例
+
+```http
+GET /api/invite/invitee?
+    cooperation_codes=eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub
+    3JnIiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2JWc
+    mdieFhVWVN2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c
+    2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6KkM2
+    _D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw
+    %20eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoi
+    aHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVVlTdmRF
+    cDVnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpb
+    Im9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u8023EcOTogD2JA
+    x1g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB4vOxNR41wVKm9-cq79
+    dJ3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2kK8_JAvSLlbR43NMlzYC6Tx
+    l944a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yAdY2w04UrttbrGsR2HghdQX7xAP
+    Fu1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaOaoNUgRHMQ HTTP/1.1
+Host: to.example.org
+```
+
+改行とインデントは表示の都合による。
 
 
 #### 6.3.2. HTTP ヘッダによる付加
 
-X-Edo-Cooperation-Codes ヘッダに入れる。
-仲介データは適切にエスケープする。
+カンマ区切りで X-Edo-Cooperation-Codes ヘッダに入れる。
+
+
+##### 6.3.2.1. HTTP ヘッダによる付加例
+
+```http
+GET /api/invite/invitee HTTP/1.1
+Host: to.example.org
+X-Edo-Cooperation-Codes: eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbG
+    Uub3JnIiwiaXNzIjoiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2
+    JWcmdieFhVWVN2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLC
+    J1c2VyX3RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6K
+    kM2_D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw
+    ,eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIjoiaH
+    R0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVVlTdmRFcD
+    VnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl90YWdzIjpbIm
+    9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u8023EcOTogD2JAx1
+    g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB4vOxNR41wVKm9-cq79dJ
+    3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2kK8_JAvSLlbR43NMlzYC6Txl9
+    44a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yAdY2w04UrttbrGsR2HghdQX7xAPFu
+    1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaOaoNUgRHMQ
+```
+
+改行とインデントは表示の都合による。
 
 
 #### 6.3.3. リクエストボディによる付加
@@ -546,6 +567,38 @@ X-Edo-Cooperation-Codes ヘッダに入れる。
     * `cooperation_codes_in_body` パラメータを `true` とする。
 * HTTP ヘッダでの宣言
     * X-Edo-Cooperation-Codes-In-Body ヘッダを `true` とする。
+
+
+##### 6.3.3.1. リクエストボディによる付加例
+
+```http
+POST /api/invite HTTP/1.1
+Host: to.example.org
+Content-Type: application/json
+X-Edo-Cooperation-Codes-In-Body: true
+
+{
+    "invitee": [
+        "invitee"
+    ],
+    "cooperation_codes": [
+        "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIj
+        oiaHR0cHM6Ly9pZHAuZXhhbXBsZS5vcmciLCJyZWZfaGFzaCI6IjZFYTYzT2JWcmdieFhVWV
+        N2ZEVwNWciLCJzdWIiOiJwOS1GcHhYeFhCdDVQUXJNOS02VC10M2w5ZVN6MW4iLCJ1c2VyX3
+        RhZyI6Imludml0ZXIiLCJ1c2VyX3RhZ3MiOlsiaW52aXRlZSJdfQ.1nFr8wcg0dVzT6KkM2_
+        D_WMV5gtXrqYIirPPGkQqtE8rGXoKDET-sUtJFVudvRrZAN-yl1FX2KYd5ofWAVAtfw",
+        "eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczovL3RvLmV4YW1wbGUub3JnIiwiaXNzIj
+        oiaHR0cHM6Ly9pZHAyLmV4YW1wbGUub3JnIiwicmVmX2hhc2giOiI2RWE2M09iVnJnYnhYVV
+        lTdmRFcDVnIiwic3ViIjoieG9LcE9LQ2xEM1VRTktuOHBscXd0NEVGd3VuLVZyIiwidXNlcl
+        90YWdzIjpbIm9ic2VydmVyIl19.M7KSHQ-AW5lUpFVqzJq1RX_IG4joZfc5KBJEtCV71768u
+        8023EcOTogD2JAx1g6FvQN0CW3Kd7i_aKsO6BleO5f39r2kqqJeL8vY9ss9AQbNkd5GHaBIB
+        4vOxNR41wVKm9-cq79dJ3UiLQwlatPtT7u7yRVe0jwfYbN6yg48dNNeAzXcAyG2mvRFnhm2k
+        K8_JAvSLlbR43NMlzYC6Txl944a7E-jc-EB7dEOhm-vI-vM6XKnOjhOIWSVsa2gObSIN77yA
+        dY2w04UrttbrGsR2HghdQX7xAPFu1Wp59aJAr3Ae4bjgKwLOGtiyNGpXGCm1jQSBJ-yxyyaO
+        aoNUgRHMQ"
+    ]
+}
+```
 
 
 ### 6.4. 処理要請リクエストの検証
