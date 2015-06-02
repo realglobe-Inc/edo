@@ -622,7 +622,7 @@ IdP は要請先仲介エンドポイントを TLS で提供しなければな�
 #### 7.2.1. 処理の主体が属す IdP への要請先仲介リクエスト例
 
 ```HTTP
-POST /cooperation/to HTTP/1.1
+POST /coop/to HTTP/1.1
 Host: idp.example.org
 Content-Type: application/json
 
@@ -652,7 +652,7 @@ TA 認証用データは省いている。
 #### 7.2.2. 処理の主体が属さない IdP への要請先仲介リクエスト例
 
 ```HTTP
-POST /cooperation/to HTTP/1.1
+POST /coop/to HTTP/1.1
 Host: idp2.example.org
 Content-Type: application/json
 
