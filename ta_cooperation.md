@@ -863,7 +863,7 @@ IdP からのエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 |X-Edo-Cooperation-Error|適切なメッセージ|
 
 その他の形式は要請先 TA の裁量である。
-`error` の値を `invalid_request` とした [OAuth 2.0 Section 5.2] 形式にすることを推奨する。
+[OAuth 2.0 Section 5.2] 形式にすることを推奨する。
 
 
 <!-- 参照 -->
