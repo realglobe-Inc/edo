@@ -126,7 +126,8 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
       そうでなければ無し。
       他の IdP に属す関連するアカウント全てについて、アカウントタグからアカウントのハッシュ値へのマップ。
 * **`hash_alg`**
-    * 必須。
+    * `response_type` が `referral` を含む場合は必須。
+      そうでなければ無し。
       `related_users` におけるアカウントのハッシュ値計算アルゴリズム。
 * **`related_issuers`**
     * `response_type` が `referral` を含む場合は必須。
