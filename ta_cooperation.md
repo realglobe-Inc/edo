@@ -108,6 +108,7 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
 * **`scope`**
     * 任意。
       要請先 TA に新しく発行されるアクセストークンに対して許可されるスコープの最大範囲。
+      形式は [OAuth 2.0 Section 3.3] を参照のこと。
       `access_token` で指定したアクセストークンに対して許可されていないスコープを含んではならない。
 * **`expires_in`**
     * 任意。
@@ -869,6 +870,7 @@ IdP からのエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 [JWT Section 4.1.4]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32#section-4.1.4
 [JWT Section 4.1.7]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32#section-4.1.7
 [JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
+[OAuth 2.0 Section 3.3]: http://tools.ietf.org/html/rfc6749#section-3.3
 [OAuth 2.0 Section 5.1]: http://tools.ietf.org/html/rfc6749#section-5.1
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
 [OpenID Connect Core 1.0 Section 5.5]: http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter
