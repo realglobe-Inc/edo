@@ -108,6 +108,7 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
 * **`scope`**
     * 任意。
       要請先 TA に新しく発行されるアクセストークンに対して許可されるスコープの最大範囲。
+      形式は [OAuth 2.0 Section 3.3] を参照のこと。
       `access_token` で指定したアクセストークンに対して許可されていないスコープを含んではならない。
 * **`expires_in`**
     * 任意。
@@ -125,7 +126,8 @@ IdP は要請元仲介エンドポイントを TLS で提供しなければな�
       そうでなければ無し。
       他の IdP に属す関連するアカウント全てについて、アカウントタグからアカウントのハッシュ値へのマップ。
 * **`hash_alg`**
-    * 必須。
+    * `response_type` が `referral` を含む場合は必須。
+      そうでなければ無し。
       `related_users` におけるアカウントのハッシュ値計算アルゴリズム。
 * **`related_issuers`**
     * `response_type` が `referral` を含む場合は必須。
@@ -622,7 +624,7 @@ IdP は要請先仲介エンドポイントを TLS で提供しなければな�
 #### 7.2.1. 処理の主体が属す IdP への要請先仲介リクエスト例
 
 ```HTTP
-POST /cooperation/to HTTP/1.1
+POST /coop/to HTTP/1.1
 Host: idp.example.org
 Content-Type: application/json
 
@@ -652,7 +654,7 @@ TA 認証用データは省いている。
 #### 7.2.2. 処理の主体が属さない IdP への要請先仲介リクエスト例
 
 ```HTTP
-POST /cooperation/to HTTP/1.1
+POST /coop/to HTTP/1.1
 Host: idp2.example.org
 Content-Type: application/json
 
@@ -670,7 +672,7 @@ TA 認証用データは省いている。
 IdP は以下のように要請先仲介リクエストを検証しなければならない。
 --f--> は失敗時のエラーレスポンスの `error` の値を示す。
 
-* 要請元 TA を認証する。
+* 要請先 TA を認証する。
     * --f--> `invalid_client`
 * リクエストが必要なパラメータを含むことを確認する。
     * --f--> `invalid_request`
@@ -861,7 +863,7 @@ IdP からのエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 |X-Edo-Cooperation-Error|適切なメッセージ|
 
 その他の形式は要請先 TA の裁量である。
-`error` の値を `invalid_request` とした [OAuth 2.0 Section 5.2] 形式にすることを推奨する。
+[OAuth 2.0 Section 5.2] 形式にすることを推奨する。
 
 
 <!-- 参照 -->
@@ -869,6 +871,7 @@ IdP からのエラーは [OAuth 2.0 Section 5.2] の形式で返す。
 [JWT Section 4.1.4]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32#section-4.1.4
 [JWT Section 4.1.7]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32#section-4.1.7
 [JWT]: https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
+[OAuth 2.0 Section 3.3]: http://tools.ietf.org/html/rfc6749#section-3.3
 [OAuth 2.0 Section 5.1]: http://tools.ietf.org/html/rfc6749#section-5.1
 [OAuth 2.0 Section 5.2]: http://tools.ietf.org/html/rfc6749#section-5.2
 [OpenID Connect Core 1.0 Section 5.5]: http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter
