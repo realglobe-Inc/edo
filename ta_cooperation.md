@@ -545,6 +545,7 @@ Host: to.example.org
 #### 6.3.2. HTTP ヘッダによる付加
 
 カンマ区切りで X-Edo-Code-Tokens ヘッダに入れる。
+複数の X-Edo-Code-Tokens ヘッダに分けて付加しても良い。
 
 
 ##### 6.3.2.1. HTTP ヘッダによる付加例
